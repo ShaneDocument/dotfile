@@ -1,0 +1,12 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =4
+let g:netrw_dirhist_4='/Users/shane/.vim'
+let g:netrw_dirhist_3='/'
+let g:netrw_dirhist_2='/Users/shane/Documents/C/CS_test/project1/inc'
+let g:netrw_dirhist_1='/Users/shane/Documents/python/module/__pycache__'
+let g:netrw_dirhist_0='/Users/shane/.oh-my-zsh/.git'
+let g:netrw_dirhist_9='/Users/shane/.oh-my-zsh'
+let g:netrw_dirhist_8='/Users/shane'
+let g:netrw_dirhist_7='/Users/shane/Documents/CPP'
+let g:netrw_dirhist_6='/Users/shane'
+let g:netrw_dirhist_5='/Users/shane/source'
