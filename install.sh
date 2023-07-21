@@ -26,6 +26,9 @@ cp -r -v ./.tmux_theme $HOME
 echo "Copy cscope build script..."
 mkdir ~/bash_script
 cp -v ./build_cscope.sh ~/bash_script
+# Copy .clang_format...
+echo "Copy .clang_format..."
+cp -r -v ./.clang_format $HOME
 
 # Setting bash_profile...
 echo "Setting bash_profile..."
@@ -37,24 +40,3 @@ if [ $? -eq 0 ]; then
     mkdir "~/bin"
 fi
 echo "PATH=\$HOME//bin:\$PATH" | tee -a ~/.bash_profile
-# Install Python
-# cd Python-3.11.1
-# ./configure --prefix=$HOME/python --enable-optimizations --enable-shared
-# make -j 8
-# make install -j 8
-# cd ..
-# ls
-# C_INCLUDE_PATH=$HOME/Python/include/python3.11
-# export C_INCLUDE_PATH
-
-# PATH=$HOME/python/bin:${PATH}
-# export PATH
-# # Install CMake
-# cd CMake
-# ./bootstrap --prefix=$HOME/local/bin/CMake
-# make -j 8
-# make install -j 8
-# cd ..
-# ls
-# PATH=$HOME/local/bin/CMake/bin:${PATH}
-# export PATH

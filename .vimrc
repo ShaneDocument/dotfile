@@ -42,6 +42,10 @@ nnoremap <SPACE> <Nop>
 :inoremap " ""<Esc>i
 :inoremap [ []<Esc>i
 :inoremap ' ''<Esc>i
+" Press Ctrl + d to update the file
+:inoremap <C-d> <Esc>:up<CR>
+" Set for vim-Clangformat
+xnoremap <C-c> :ClangFormat<CR>
 
 " Set the toggle of highlight
 nmap <leader>sh :set hlsearch!<CR>

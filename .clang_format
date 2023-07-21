@@ -1,0 +1,12 @@
+BasedOnStyle: LLVM
+
+AllowShortIfStatementsOnASingleLine: false
+ColumnLimit: 80
+IndentCaseLabels: true
+BreakBeforeBraces: Linux
+IndentPPDirectives: BeforeHash
+IndentWidth: 4
+MaxEmptyLinesToKeep: 2
+SortIncludes: false
+SpaceAfterCStyleCast: true
+TabWidth: 4
