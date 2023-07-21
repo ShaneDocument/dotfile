@@ -50,6 +50,9 @@ xnoremap <C-c> :ClangFormat<CR>
 " Set the toggle of highlight
 nmap <leader>sh :set hlsearch!<CR>
 
+" Set the toggle of line number
+nmap <leader>sn :set nu!<CR>
+
 " Set the toggle of mouse
 function! ToggleMouse()
     if &mouse == ''
@@ -60,54 +63,78 @@ function! ToggleMouse()
 endfunction
 nnoremap <leader>sm :call ToggleMouse()<cr>
 
-" Set the function of vimgrep
+" Set the function for vimgrep
 " vimgrep will use quickfix. Therefore, I setup the configuration for qucikfix
 let g:search_pattern = ' '
-
-function! QuickFixHighLight()
-    if &buftype ==# 'quickfix'
-        " The 'cwindow' is fine to be  executed again in quickfix
-        execute "call EnterQuickFix()"
-    endif
-endfunction
+let g:winview = ' '
 
 " Enter the quickfix and highlight the search pattern
 function! EnterQuickFix()
-    execute "cwindow"
-    execute "highlight pattern ctermbg=39"
-    execute "match pattern /". g:search_pattern. "/"
+    if &buftype != 'quickfix'
+    " Save the view of original window. It's used in QuickMoveHighlight
+        let g:winview = winsaveview()
+    endif
+    execute "copen"
+    execute "call QuickFixPatternHighlight()"
 endfunction
 
-" Set up tje search_pattern and execute the vimgrep. Then enter the quickfix
-function! VimGrepCurrentFile(cmd, pattern)
+function! QuickFixPatternHighlight()
+    if &buftype == 'quickfix'
+        execute "highlight pattern ctermbg=39"
+        execute "match pattern /". g:search_pattern. "/"
+    endif
+endfunction
+
+" Set up the search_pattern and execute the vimgrep. Then enter the quickfix
+function! VimGrepCurrentFile(cmd, pattern, file)
     if a:cmd == 'normal'
         let g:search_pattern = a:pattern
     elseif a:cmd == 'gd'
         let word = expand("<cword>")
         let g:search_pattern = '\<'.escape(word, '\'). '\>'
     endif
-    execute "vimgrep /". g:search_pattern."/ %"
+    execute "vimgrep /". g:search_pattern."/j" . a:file
     execute "call EnterQuickFix()"
 endfunction
-nmap <leader>gp :call VimGrepCurrentFile("normal", "")<left><left>
-nmap <leader>gd :call VimGrepCurrentFile("gd", "")<cr>
+nmap <leader>gp :call VimGrepCurrentFile("normal", "", " %")<left><left><left><left><left><left><left><left>
+nmap <leader>gd :call VimGrepCurrentFile("gd", "", " %")<cr>
+
+" Search the text for current folder
+nmap <leader>ap :call VimGrepCurrentFile("normal", "", " *")<left><left><left><left><left><left><left><left>
+nmap <leader>ag :call VimGrepCurrentFile("gd", "", " *")<cr>
 
 " ********* QuickFix  *********
 nmap <leader>gc :cclose<cr>
 nmap <leader>go :call EnterQuickFix()<cr>
 
-" Set the toggle of line number
-nmap <leader>sn :set nu!<CR>
+" Navigate the whole-line highlight in quickfix
+function! QuickFixMoveHighlight(cmd)
+    try
+        execute a:cmd
+    catch
+    endtry
+    call winrestview(g:winview)
+    execute "call EnterQuickFix()"
+endfunction
+nnoremap <expr> j &buftype ==# 'quickfix' ? ":call QuickFixMoveHighlight('cnext')<CR>" : "j"
+nnoremap <expr> k &buftype ==# 'quickfix' ? ":call QuickFixMoveHighlight('cprev')<CR>" : "k"
+
+" window switch - Highlight for quickfix
+:nmap <leader>h :wincmd h<CR>:call QuickFixPatternHighlight()<CR>
+:nmap <leader>l :wincmd l<CR>:call QuickFixPatternHighlight()<CR>
+:nmap <leader>j :wincmd j<CR>:call QuickFixPatternHighlight()<CR>
+:nmap <leader>k :wincmd k<CR>:call QuickFixPatternHighlight()<CR>
+
+
 
 " Tab switch
 :nmap <TAB> :tabn<CR>
 :nmap <S-TAB> :tabp<CR>
 
-" window switch
-:nmap <leader>h :wincmd h<CR>:call QuickFixHighLight()<CR>
-:nmap <leader>l :wincmd l<CR>:call QuickFixHighLight()<CR>
-:nmap <leader>j :wincmd j<CR>:call QuickFixHighLight()<CR>
-:nmap <leader>k :wincmd k<CR>:call QuickFixHighLight()<CR>
+
+" window create
+:nmap <leader>w- :split<CR>
+:nmap <leader>w/ :vsplit<CR>
 
 " Color configuration
 hi LineNr cterm=bold ctermfg=DarkGrey ctermbg=NONE
@@ -122,9 +149,9 @@ source ~/.vim/.cscope_config
 " Plugins
 :set rtp+=~/.vim/bundle/nerdtree
 :set rtp+=~/.vim/bundle/vim-clang-format
-":set rtp+=~/.vim/bundle/YouCompleteMe
 :set rtp+=~/.vim/bundle/vim-airline
 :set rtp+=~/.vim/bundle/supertab
+
 
 " ****** supertab Setting ******
 
@@ -146,8 +173,6 @@ nnoremap <leader>nf :NERDTreeFind<CR>
 let NERDTreeShowHidden=1
 let NERDTreeCustomOpenArgs={'file':{'where': 't'}}
 
-" Execute the match
-autocmd BufEnter * :match ExtraWhiteSpace /\s\+$/
 " Exit Vim if NERDTree is the only window remaining in the only tab.
 autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
 " Close the tab if NERDTree is the only window remaining in it.
@@ -157,12 +182,9 @@ autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_
     \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
 
 
-" ****** YCM Setting ******
-
-let g:ycm_python_binary_path='Users/shane/python/bin/python3'
-let g:ycm_global_ycm_extra_conf = "/Users/shane/.vim/bundle/YouCompleteMe/.ycm_extra_conf.py"
-let g:ycm_enable_diagnostic_highlighting = 1
-inoremap <C-Space> <C-x><C-o>
+" Vim like file explorer
+let NERDTreeMapUpdir = 'h'
+let NERDTreeMapChangeRoot = 'l'
 
 " ****** Airline Setting ******
 set noshowmode
@@ -200,3 +222,30 @@ endif
 :set spell spelllang=en_us
 hi clear SpellBad
 hi SpellBad cterm=underline,bold
+
+" Execute the match
+autocmd BufEnter,WinEnter * :match ExtraWhiteSpace /\s\+$/
+
+" Show file name even only one file is opened
+set showtabline=2
+
+set tabline=%!MyTabLine()
+function! MyTabLine()
+    let s = ''
+    for i in range(tabpagenr('$'))
+        let buflist = tabpagebuflist(i + 1)
+        let winnr = tabpagewinnr(i + 1)
+        let s .= '%' . (i + 1) . 'T'
+        let s .= (i + 1 == tabpagenr() ? '%#TabLineSel#' : '%#TabLine#')
+        let s .= ' '  . fnamemodify(bufname(buflist[winnr - 1]), ':t') . repeat(' ', 2)
+    endfor
+    let s .= '%T%#TabLineFill#%= '
+    return s
+endfunction
+
+function! SynStack()
+  if !exists("*synstack")
+      return
+        endif
+          echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+          endfunc
