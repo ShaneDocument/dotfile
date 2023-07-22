@@ -65,8 +65,8 @@ nnoremap <leader>sm :call ToggleMouse()<cr>
 
 " Set the function for vimgrep
 " vimgrep will use quickfix. Therefore, I setup the configuration for qucikfix
-let g:search_pattern = ' '
-let g:winview = ' '
+let g:search_pattern = ''
+let g:winview = ''
 
 " Enter the quickfix and highlight the search pattern
 function! EnterQuickFix()
@@ -111,9 +111,9 @@ nmap <leader>go :call EnterQuickFix()<cr>
 function! QuickFixMoveHighlight(cmd)
     try
         execute a:cmd
+        execute "normal! \<C-O>"
     catch
     endtry
-    call winrestview(g:winview)
     execute "call EnterQuickFix()"
 endfunction
 nnoremap <expr> j &buftype ==# 'quickfix' ? ":call QuickFixMoveHighlight('cnext')<CR>" : "j"
@@ -229,6 +229,7 @@ autocmd BufEnter,WinEnter * :match ExtraWhiteSpace /\s\+$/
 " Show file name even only one file is opened
 set showtabline=2
 
+" Only shows filename in the tab
 set tabline=%!MyTabLine()
 function! MyTabLine()
     let s = ''
@@ -242,10 +243,3 @@ function! MyTabLine()
     let s .= '%T%#TabLineFill#%= '
     return s
 endfunction
-
-function! SynStack()
-  if !exists("*synstack")
-      return
-        endif
-          echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
-          endfunc
