@@ -8,35 +8,75 @@ check_folder_exist() {
     fi
     return 0
 }
-read -rsp $'This install script will delete your .vim, .vimrc and .tmux.conf. Press y to continue....\n' -n1 READ
-if [ "$READ" != 'y' ]; then
-    echo "**** STOP do this. ****"
+
+mv_files() {
+    filename=$1
+    dest=$2
+    full_path=$(realpath "$dest")
+    printf "Move [%s] to [%s]...\n" "$filename" "$full_path"
+    mv $filename $full_path/
+}
+
+backup_files() {
+    filename=$1
+    backup_folder=$2
+    mv_files $filename $backup_folder
+}
+
+copy_files() {
+    filename=$1
+    dest=$2
+    full_path=$(realpath "$dest")
+    printf "Copy [%s] to [%s]...\n" "$filename" "$full_path"
+    cp -r -v ./$filename $dest
+}
+
+log_file="./build_log"
+
+exec > >(tee "$log_file") 2>&1
+
+files=(".vim" ".vimrc" ".tmux.conf" ".tmux_theme" ".clang-format" "bash_script" ".bash_profile")
+backup_folder="./bak"
+
+echo "These files:"
+for file in ${files[@]}; do
+    printf "%s\n" "$file"
+done
+
+read -rsp $'$will be backed up before installing. Still Install?[Y/N]\n' -n1 READ
+if [ "$READ" != 'y' ] && [ "$READ" != 'Y' ]; then
+    echo "**** STOP doing this. ****"
     exit 1
 fi
 
-# Copy vim configuration...
-echo "Copy vim configuration..."
-cp -r -v ./.vim $HOME
-cp -r -v ./.vimrc $HOME
-# Copy tmux configuration...
-echo "Copy tmux configuration..."
-cp -r -v ./.tmux.conf $HOME
-cp -r -v ./.tmux_theme $HOME
-# Copy cscope build script...
-echo "Copy cscope build script..."
-mkdir ~/bash_script
-cp -v ./build_cscope.sh ~/bash_script
-# Copy .clang_format...
-echo "Copy .clang_format..."
-cp -r -v ./.clang_format $HOME
+check_folder_exist $backup_folder
+if [ $? -eq 1 ]; then
+    echo "Start backing up..."
+    mkdir $backup_folder
+    for file in ${files[@]}; do
+        src_file=$HOME/$file
+        backup_files $src_file $backup_folder
+    done
+    echo "Finish backing up."
+fi
 
+
+for file in ${files[@]}; do
+    copy_files $file $HOME
+done
 # Setting bash_profile...
 echo "Setting bash_profile..."
-echo "alias tmux=\"TERM=screen-256color-bce tmux\"" | tee -a ~/.bash_profile
-echo "alias :q=\"exit\"" | tee -a ~/.bash_profile
-echo "export TERM=\"xterm-256color\"" | tee -a ~/.bash_profile
-check_folder_exist "~/bin"
-if [ $? -eq 0 ]; then
-    mkdir "~/bin"
+if grep -q "ShaneDocument" "$HOME/.bash_profile"; then
+    echo "Already append to .bash_profile."
+else
+    echo "***************** ShaneDocument *****************\"" | tee -a ~/.bash_profile
+    echo "alias tmux=\"TERM=screen-256color-bce tmux\"" | tee -a ~/.bash_profile
+    echo "alias :q=\"exit\"" | tee -a ~/.bash_profile
+    echo "export TERM=\"xterm-256color\"" | tee -a ~/.bash_profile
+    check_folder_exist "~/bin"
+    if [ $? -eq 1 ]; then
+        mkdir "~/bin"
+    fi
+    echo "PATH=\$HOME//bin:\$PATH" | tee -a ~/.bash_profile
 fi
-echo "PATH=\$HOME//bin:\$PATH" | tee -a ~/.bash_profile
+
