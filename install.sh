@@ -35,7 +35,7 @@ log_file="./build_log"
 
 exec > >(tee "$log_file") 2>&1
 
-files=(".vim" ".vimrc" ".tmux.conf" ".tmux_theme" ".clang-format" "bash_script" ".bash_profile")
+files=(".vim" ".vimrc" ".tmux.conf" ".tmux_theme" ".clang-format" "bash_script" ".bash_profile" ".bash_commons")
 backup_folder="./bak"
 
 echo "These files:"
@@ -66,17 +66,13 @@ for file in ${files[@]}; do
 done
 # Setting bash_profile...
 echo "Setting bash_profile..."
-if grep -q "ShaneDocument" "$HOME/.bash_profile"; then
-    echo "Already append to .bash_profile."
+if grep -q "bash_commons" "$HOME/.bash_profile"; then
+    echo "Already finish setting .bash_profile."
 else
-    echo "***************** ShaneDocument *****************\"" | tee -a ~/.bash_profile
-    echo "alias tmux=\"TERM=screen-256color-bce tmux\"" | tee -a ~/.bash_profile
-    echo "alias :q=\"exit\"" | tee -a ~/.bash_profile
-    echo "export TERM=\"xterm-256color\"" | tee -a ~/.bash_profile
+    echo "source $HOME/.bash_commons" | tee -a ~/.bash_profile
     check_folder_exist "~/bin"
     if [ $? -eq 1 ]; then
-        mkdir "~/bin"
+        mkdir ~/bin
     fi
-    echo "PATH=\$HOME//bin:\$PATH" | tee -a ~/.bash_profile
 fi
 

@@ -238,7 +238,7 @@ function! MyTabLine()
         let winnr = tabpagewinnr(i + 1)
         let s .= '%' . (i + 1) . 'T'
         let s .= (i + 1 == tabpagenr() ? '%#TabLineSel#' : '%#TabLine#')
-        let s .= ' '  . fnamemodify(bufname(buflist[winnr - 1]), ':t') . repeat(' ', 2)
+        let s .= ' '  . fnamemodify(bufname(buflist[winnr - 1]), ':t') . ' '
     endfor
     let s .= '%T%#TabLineFill#%= '
     return s
