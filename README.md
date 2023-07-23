@@ -2,7 +2,7 @@
 ## Quick Start
 ```
 $ git clone https://github.com/ShaneDocument/dotfile.git
-$ cd dorfile
+$ cd dotfile
 $ ./install.sh
 ```
 
@@ -21,6 +21,4 @@ Most of the configurations are located in **.tmux.conf**.
 
 
 ## TODO
-1. Support clang-format: Currently, it doesn't support clang-format yet.
-2. auto-backup: Auto backup the configuration before installing.
-3. vim-ls: "ls" in vim.
+1. vim-ls: "ls" in vim.

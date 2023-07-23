@@ -100,8 +100,8 @@ nmap <leader>gp :call VimGrepCurrentFile("normal", "", " %")<left><left><left><l
 nmap <leader>gd :call VimGrepCurrentFile("gd", "", " %")<cr>
 
 " Search the text for current folder
-nmap <leader>ap :call VimGrepCurrentFile("normal", "", " *")<left><left><left><left><left><left><left><left>
-nmap <leader>ag :call VimGrepCurrentFile("gd", "", " *")<cr>
+nmap <leader>ap :call VimGrepCurrentFile("normal", "", " **/*")<left><left><left><left><left><left><left><left>
+nmap <leader>ag :call VimGrepCurrentFile("gd", "", " **/*")<cr>
 
 " ********* QuickFix  *********
 nmap <leader>gc :cclose<cr>
