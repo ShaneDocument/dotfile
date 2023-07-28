@@ -1,0 +1,64 @@
+" Set the toggle of mouse
+function! ToggleMouse()
+    if &mouse == ''
+        let &mouse='a'
+    else
+        let &mouse=''
+    endif
+endfunction
+
+" Set the function for vimgrep
+" vimgrep will use quickfix. Therefore, I setup the configuration for qucikfix
+let g:search_pattern = ''
+
+" Enter the quickfix and highlight the search pattern
+function! EnterQuickFix()
+    if &buftype != 'quickfix'
+    " Save the view of original window. It's used in QuickMoveHighlight
+    endif
+    execute "copen"
+    execute "call QuickFixPatternHighlight()"
+endfunction
+
+function! QuickFixPatternHighlight()
+    if &buftype == 'quickfix'
+        execute "highlight pattern ctermbg=39"
+        execute "match pattern /". g:search_pattern. "/"
+    endif
+endfunction
+
+" Set up the search_pattern and execute the vimgrep. Then enter the quickfix
+function! VimGrepCurrentFile(cmd, pattern, file)
+    if a:cmd == 'normal'
+        let g:search_pattern = a:pattern
+    elseif a:cmd == 'gd'
+        let word = expand("<cword>")
+        let g:search_pattern = '\<'.escape(word, '\'). '\>'
+    endif
+    execute "vimgrep /". g:search_pattern."/j" . a:file
+    execute "call EnterQuickFix()"
+endfunction
+
+function! QuickFixMoveHighlight(cmd)
+    try
+        execute a:cmd
+        " execute "normal! \<C-O>"
+    catch
+    endtry
+    execute "call EnterQuickFix()"
+endfunction
+
+" Only shows filename in the tab
+set tabline=%!MyTabLine()
+function! MyTabLine()
+    let s = ''
+    for i in range(tabpagenr('$'))
+        let buflist = tabpagebuflist(i + 1)
+        let winnr = tabpagewinnr(i + 1)
+        let s .= '%' . (i + 1) . 'T'
+        let s .= (i + 1 == tabpagenr() ? '%#TabLineSel#' : '%#TabLine#')
+        let s .= ' '  . fnamemodify(bufname(buflist[winnr - 1]), ':t') . ' '
+    endfor
+    let s .= '%T%#TabLineFill#%= '
+    return s
+endfunction

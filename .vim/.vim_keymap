@@ -1,0 +1,60 @@
+" Change leader to space
+let mapleader = " "
+nnoremap <SPACE> <Nop>
+
+" Hot key for insert mode
+:inoremap ( ()<Esc>i
+:inoremap {} {}<Esc>i
+:inoremap {<CR> {<CR>}<Esc>ko
+:inoremap " ""<Esc>i
+:inoremap [ []<Esc>i
+:inoremap ' ''<Esc>i
+" Press Ctrl + d to update the file
+:inoremap <C-d> <Esc>:up<CR>
+" Set for vim-Clangformat
+xnoremap <C-c> :ClangFormat<CR>
+
+" Set the toggle of highlight
+nmap <leader>sh :set hlsearch!<CR>
+
+" Set the toggle of line number
+nmap <leader>sn :set nu!<CR>
+
+nnoremap <leader>sm :call ToggleMouse()<cr>
+
+" Hot key for terminal
+nmap <leader>t- :hor terminal<CR><C-w>w:res +10<CR><C-w>w
+nmap <leader>t/ :vert terminal<CR><C-w>w:vertical res +20<CR><C-w>w
+
+nmap <leader>gp :call VimGrepCurrentFile("normal", "", " %")<left><left><left><left><left><left><left><left>
+nmap <leader>gd :call VimGrepCurrentFile("gd", "", " %")<cr>
+
+" Search the text for current folder
+nmap <leader>ap :call VimGrepCurrentFile("normal", "", " **/*")<left><left><left><left><left><left><left><left>
+nmap <leader>ag :call VimGrepCurrentFile("gd", "", " **/*")<cr>
+
+" ********* QuickFix  *********
+nmap <leader>gc :cclose<cr>
+nmap <leader>go :call EnterQuickFix()<cr>
+
+" Navigate the whole-line highlight in quickfix
+nnoremap <expr> j &buftype ==# 'quickfix' ? ":call QuickFixMoveHighlight('cnext')<CR>" : "j"
+nnoremap <expr> k &buftype ==# 'quickfix' ? ":call QuickFixMoveHighlight('cprev')<CR>" : "k"
+
+" window switch - Highlight for quickfix
+:nmap <leader>h :wincmd h<CR>:call QuickFixPatternHighlight()<CR>
+:nmap <leader>l :wincmd l<CR>:call QuickFixPatternHighlight()<CR>
+:nmap <leader>j :wincmd j<CR>:call QuickFixPatternHighlight()<CR>
+:nmap <leader>k :wincmd k<CR>:call QuickFixPatternHighlight()<CR>
+
+
+
+" Tab switch
+:nmap <TAB> :tabn<CR>
+:nmap <S-TAB> :tabp<CR>
+
+
+" window create
+:nmap <leader>w- :split<CR>
+:nmap <leader>w/ :vsplit<CR>
+

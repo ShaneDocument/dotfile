@@ -1,0 +1,31 @@
+
+
+" ******* Color theme *******
+set cursorline
+syntax on
+
+:set nu
+:set ai
+:set cursorline
+:set incsearch
+:set expandtab
+:set tabstop=4
+:set mouse=" "
+:set hlsearch
+
+" insert a virtual space to the right of the last char (in normal mode)
+set virtualedit+=onemore
+
+" For showing the tab character
+:set list
+:set listchars=tab:>-
+
+
+" Show file name even only one file is opened
+set showtabline=2
+
+" Set the no syntax file to syntax C
+au BufNewFile,BufRead * if &syntax == '' | set syntax=C | endif
+
+" Let the backspace work fine
+set backspace=indent,eol,start

@@ -40,12 +40,12 @@ copy_files() {
 
 
 log_file="./build_log"
-files=(".vim" ".vimrc" ".tmux.conf" ".tmux_theme" ".clang_format" "bash_script" ".bash_profile" ".bash_commons")
+files=(".vim" ".vimrc" ".tmux.conf" ".tmux_theme" ".clang_format" "bash_script" ".bash_commons")
 backup_folder="./bak"
 clean_check="No need"
 backup_check="No need"
 install_check="Pass"
-bash_profile_check="Pass"
+bashrc_check="Pass"
 
 
 if [ "$1" == "clean" ] || [ "$1" == "c" ] ; then
@@ -111,19 +111,19 @@ for file in ${files[@]}; do
     fi
 done
 
-# Setting bash_profile...
-echo "Setting bash_profile..."
-if grep -q "bash_commons" "$HOME/.bash_profile"; then
-    echo "Already finish setting .bash_profile."
+# Setting bashrc...
+echo "Setting bashrc..."
+if grep -q "bash_commons" "$HOME/.bashrc"; then
+    echo "Already finish setting .bashrc."
 else
-    echo "source $HOME/.bash_commons" | tee -a ~/.bash_profile
+    echo "source $HOME/.bash_commons" | tee -a ~/.bashrc
     check_folder_exist "~/bin"
     if [ $? -eq 1 ]; then
         mkdir ~/bin
     fi
-    # Check bash_profile
-    if grep -q "bash_commons" "$HOME/.bash_profile"; then
-        bash_profile_check="Pass"
+    # Check bashrc
+    if grep -q "bash_commons" "$HOME/.bashrc"; then
+        bashrc_check="Pass"
     fi
 fi
 
@@ -136,5 +136,5 @@ echo "********************************** Build Result **************************
 echo "Clean: $clean_check"
 echo "Backup: $backup_check"
 echo "Install: $install_check"
-echo "Bash_profile setup: $bash_profile_check"
+echo "Bashrc setup: $bashrc_check"
 echo "************************************************************************************"

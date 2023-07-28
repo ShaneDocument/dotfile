@@ -1,0 +1,37 @@
+set t_Co=256
+set term=screen-256color
+colorscheme onehalfdark
+if exists('+termguicolors')
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+    set termguicolors
+endif
+
+" Set the color of vim-terminal
+let g:terminal_ansi_colors = [
+  \'#eeeeee', '#af0000', '#008700', '#5f8700',
+  \'#0087af', '#878787', '#005f87', '#444444',
+  \'#bcbcbc', '#d70000', '#d70087', '#8700af',
+  \'#d75f00', '#d75f00', '#005faf', '#005f87' ]
+
+
+" Color configuration
+hi LineNr cterm=bold ctermfg=DarkGrey ctermbg=NONE
+hi CursorLineNr cterm=bold ctermfg=Green ctermbg=NONE
+
+" When open a file, set the cursor at the line same as last time.
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+      \| exe "normal! g'\"" | endif
+endif
+:set spell spelllang=en_us
+hi clear SpellBad
+hi SpellBad cterm=underline,bold
+
+" For showing extra space
+:highlight ExtraWhiteSpace ctermbg=red guibg=red
+:match ExtraWhiteSpace /\s\+$/
+
+" Execute the match
+autocmd BufEnter,WinEnter * :match ExtraWhiteSpace /\s\+$/
+

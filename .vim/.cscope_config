@@ -13,19 +13,19 @@ endif
 " cs show: show which cscope database used -> (s)how (w)hich
 nmap <leader>sw :cs show<CR>
 " cs find t {name}: find the string {name}
-nmap <leader>st :cs find t <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>st :tab cs find t <C-R>=expand("<cword>")<CR><CR>
 " cs find d {name}: find the function called in {name} function
-nmap <leader>sd :cs find d <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>sd :tab cs find d <C-R>=expand("<cword>")<CR><CR>
 " cs find g {name}: find the definition of {name}
-nmap <leader>sg :cs find g <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>sg :tab cs find g <C-R>=expand("<cword>")<CR><CR>
 " cs find c {name}: find the use of {name}
-nmap <leader>sc :cs find c <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>sc :tab cs find c <C-R>=expand("<cword>")<CR><CR>
 " cs find e {name}: faster than egrep
-nmap <leader>se :cs find e <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>se :tab cs find e <C-R>=expand("<cword>")<CR><CR>
 " cs find f {name}: find the file
-nmap <leader>sf :cs find f <C-R>=expand("<cfile>")<CR><CR>
+nmap <leader>sf :tab cs find f <C-R>=expand("<cfile>")<CR><CR>
 " cs find i {name}: find the files include the {name} file
-nmap <leader>si :cs find i <C-R>=expand("<cfile>")<CR><CR>
+nmap <leader>si :tab cs find i <C-R>=expand("<cfile>")<CR><CR>
 " cs find s {name}: find the symbol of {name}
-nmap <leader>ss :cs find s <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>ss :tab cs find s <C-R>=expand("<cword>")<CR><CR>
 
