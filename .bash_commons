@@ -7,3 +7,17 @@ export TERM="xterm-256color"
 if [[ ":$PATH:" != *":$HOME/bin:"* ]]; then
     export PATH="$HOME/bin:$PATH"
 fi
+
+# Let vim can map <C-s> to update the files
+vim()
+{
+    # osx users, use stty -g
+    local STTYOPTS="$(stty --save 2> /dev/null)"
+    if [ $? -ne 0 ]; then
+        local STTYOPTS="$(stty -g 2> /dev/null)"
+    fi
+    stty stop '' -ixoff
+    command vim "$@"
+    stty "$STTYOPTS"
+}
+
