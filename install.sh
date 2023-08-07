@@ -99,6 +99,10 @@ if [ $? -eq 1 ]; then
     echo "Finish backing up."
 fi
 
+echo "Removing files..."
+for file in ${files[@]}; do
+    rm -rf $HOME/$file
+done
 
 for file in ${files[@]}; do
     copy_files ./$file $HOME

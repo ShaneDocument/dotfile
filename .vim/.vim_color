@@ -35,3 +35,12 @@ hi SpellBad cterm=underline,bold
 " Execute the match
 autocmd BufEnter,WinEnter * :match ExtraWhiteSpace /\s\+$/
 
+" vim diff
+highlight DiffAdd term=bold ctermfg=235 ctermbg=114 guifg=#282C34 guibg=#98C379
+highlight DiffDelete term=bold ctermfg=235 ctermbg=204 guifg=#282C34 guibg=#E06C75
+highlight DiffChange term=bold cterm=underline ctermfg=180 gui=underline guifg=#E5C07B
+highlight DiffText term=reverse ctermfg=235 ctermbg=180 guifg=#282C34 guibg=#E50C7B
+
+if &diff
+    highlight CursorLine term=underline gui=underline guibg=NONE ctermbg=NONE
+endif

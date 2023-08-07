@@ -86,7 +86,7 @@ endfunction
 function! taboverflow#defaultlabelfn(n)
     let buflist = tabpagebuflist(a:n)
     let winnr = tabpagewinnr(a:n)
-    let res = '%#StatusLineTerm#'.taboverflow#unicode_num(a:n)
+    let res = '%#StatusLineTerm#'." ".taboverflow#unicode_num(a:n)." "
     if a:n == tabpagenr()
         let res .= '%#TabLineSel#'
     else
@@ -107,7 +107,7 @@ endfunction
 
 fu taboverflow#unicode_num(number)
     let unicode_number = ""
-    let small_numbers =["0", "1", "2", "3", "4", "5", "6", "7", "7", "9"]
+    let small_numbers =["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
     "let small_numbers =["⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"]
     let number_str    = string(a:number)
     for i in range(0, len(number_str) - 1)
