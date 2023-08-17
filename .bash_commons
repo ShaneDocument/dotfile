@@ -2,6 +2,15 @@
 
 alias tmux="TERM=screen-256color-bce tmux"
 alias :q="exit"
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias csbuild="${HOME}/bash_script/build_cscope.sh"
+
+bind 'TAB:menu-complete'
+bind '"\e[Z":menu-complete-backward'
+
 export TERM="xterm-256color"
 
 if [[ ":$PATH:" != *":$HOME/bin:"* ]]; then
@@ -21,3 +30,4 @@ vim()
     stty "$STTYOPTS"
 }
 
+source ~/.bash_prompt

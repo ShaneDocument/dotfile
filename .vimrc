@@ -18,6 +18,7 @@ source ~/.vim/.cscope_config
 :set rtp+=~/.vim/bundle/vim-airline
 :set rtp+=~/.vim/bundle/supertab
 :set rtp+=~/.vim/bundle/taboverflow
+:set rtp+=~/.vim/bundle/vim-smoothie
 
 " ****** supertab Setting ******
 

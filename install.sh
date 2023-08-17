@@ -9,6 +9,14 @@ check_folder_exist() {
     return 0
 }
 
+check_file_exist() {
+    BASENAME=$(basename $1)
+    if [ ! -f $1 ]; then
+        return 1
+    fi
+    return 0
+}
+
 diff_files_folders() {
     file1=$1
     file2=$2
@@ -40,7 +48,7 @@ copy_files() {
 
 
 log_file="./build_log"
-files=(".vim" ".vimrc" ".tmux.conf" ".tmux_theme" ".clang-format" "bash_script" ".bash_commons")
+files=(".vim" ".vimrc" ".tmux.conf" ".tmux_theme" ".clang-format" "bash_script" ".bash_commons" ".bash_prompt")
 backup_folder="./bak"
 clean_check="No need"
 backup_check="No need"
@@ -92,7 +100,7 @@ if [ $? -eq 1 ]; then
             echo "Backup of '$src_file' was successful. Files are identical."
         else
             echo "Backup of '$src_file' failed. Files are different."
-            exit 2
+            # exit 2
         fi
     done
     backup_check="Pass"

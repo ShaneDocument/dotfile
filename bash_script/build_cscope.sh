@@ -42,7 +42,7 @@ do
     folder=$PWD/$folder
     check_folder_exist $folder
     echo $folder >> cscope_logs
-    find "$folder" \(-name build -o -name build_internal \) -prune -o -name "*.cfg" -o -name "*.c" -o -name "*.h" -o -name "*.json" >> $PWD/cscope.files
+    find "$folder" \( -name build -o -name build_internal \) -prune -o -name "*.cfg" -o -name "*.c" -o -name "*.h" -o -name "*.json" >> $PWD/cscope.files
 done
 check_file_exist $cscope_file_path
 cscope -Rqbvk
