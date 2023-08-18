@@ -12,6 +12,8 @@ syntax on
 :set tabstop=4
 :set mouse=" "
 :set hlsearch
+:set ignorecase
+:set smartcase
 
 " insert a virtual space to the right of the last char (in normal mode)
 set virtualedit+=onemore

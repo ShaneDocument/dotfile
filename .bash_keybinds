@@ -1,0 +1,7 @@
+bind 'TAB:menu-complete'
+bind '"\e[Z":menu-complete-backward'
+bind '"\C-k":backward-kill-word'
+bind '"k":history-search-backward'
+bind '"j":history-search-forward'
+bind '"l":forward-word'
+bind '"h":bacwardk-word'

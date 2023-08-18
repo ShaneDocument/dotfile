@@ -48,7 +48,7 @@ copy_files() {
 
 
 log_file="./build_log"
-files=(".vim" ".vimrc" ".tmux.conf" ".tmux_theme" ".clang-format" "bash_script" ".bash_commons" ".bash_prompt")
+files=(".vim" ".vimrc" ".tmux.conf" ".tmux_theme" ".clang-format" "bash_script" ".bash_commons" ".bash_prompt" ".bash_keybinds")
 backup_folder="./bak"
 clean_check="No need"
 backup_check="No need"
