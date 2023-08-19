@@ -46,25 +46,3 @@ let g:airline_mode_map = {
     \ 'V'      : 'V',
     \ ''     : 'V',
     \ }
-
-" TODO "
-""" Define a function to check if the buffer type is quickfix
-""function! IsQuickfixBuffer()
-""    return &buftype ==# 'quickfix'
-"" endfunction
-""" Define the custom mapping for <CR> in the quickfix buffer
-""function! QuickfixEnter()
-""   if IsQuickfixBuffer()
-""       let l:line = getline('.')
-""       let l:parts = split(l:line, '|')
-""       if len(l:parts) > 1 && filereadable(l:parts[0])
-""           execute "normal! <C-W>w"
-""           execute 'tabnew ' . l:parts[0]
-""       endif
-""   else
-""       return "\<CR>"
-""   endif
-""endfunction
-""
-""" Map <CR> in normal mode to call the QuickfixEnter function
-""nnoremap <expr> <CR> QuickfixEnter()

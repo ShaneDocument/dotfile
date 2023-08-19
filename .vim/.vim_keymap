@@ -48,6 +48,12 @@ nnoremap <silent> <expr> k &buftype ==# 'quickfix' ? ":call QuickFixMoveHighligh
 :nmap <silent> <leader>j :wincmd j<CR>:call QuickFixPatternHighlight()<CR>
 :nmap <silent> <leader>k :wincmd k<CR>:call QuickFixPatternHighlight()<CR>
 
+augroup QuickfixMappings
+    autocmd!
+    autocmd FileType qf nnoremap <buffer> <CR> :call OpenQuickfixInNewTabEnter()<CR>
+    autocmd FileType qf nnoremap <buffer> <leader>cg :call OpenQuickfixInNewTab()<left>
+augroup END
+
 " Tab switch
 :nmap <TAB> :tabn<CR>
 :nmap <S-TAB> :tabp<CR>

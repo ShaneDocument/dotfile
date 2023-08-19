@@ -42,7 +42,7 @@ endfunction
 function! QuickFixMoveHighlight(cmd)
     try
         execute a:cmd
-        " execute "normal! \<C-O>"
+        execute "normal! \<C-O>"
     catch
     endtry
     execute "call EnterQuickFix()"
@@ -62,3 +62,19 @@ function! MyTabLine()
     let s .= '%T%#TabLineFill#%= '
     return s
 endfunction
+
+function! OpenQuickfixInNewTab(q_line)
+    let entry = getqflist()[a:q_line - 1]
+    let bufnr = entry['bufnr']
+    let line = entry['lnum']
+    execute "cclose"
+    execute 'tab sbuffer' . bufnr
+    execute 'normal! ' . line . 'G'
+endfunction
+
+function! OpenQuickfixInNewTabEnter()
+    let quickfix_line = line('.')
+    execute 'normal! ' . quickfix_line . 'G'
+    execute 'call OpenQuickfixInNewTab(quickfix_line)'
+endfunction
+
