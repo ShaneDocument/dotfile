@@ -47,3 +47,13 @@ endif
 
 " Disable highlight of Quickfix
 highlight QuickFixLine ctermbg=none
+
+
+" Set highlight when entering quickfix window
+autocmd FileType qf highlight CursorLine cterm=bold ctermbg=DarkCyan ctermfg=White guibg=#005f5f guifg=#ffffff
+autocmd WinEnter * if &buftype == 'quickfix' | highlight CursorLine cterm=bold ctermbg=DarkCyan ctermfg=White guibg=#005f5f guifg=#ffffff | endif
+
+" Restore default highlight when exiting quickfix window
+autocmd WinLeave * if &buftype == 'quickfix' | highlight CursorLine term=underline ctermbg=237 guibg=#313640 | endif
+
+highligh CursorLine cterm=bold
