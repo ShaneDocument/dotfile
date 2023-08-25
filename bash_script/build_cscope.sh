@@ -24,9 +24,15 @@ check_folder_exist() {
 
 PWD=$(pwd -P)
 
-if [ $1 == "rm" ]
+if [ $1 == "-rm" ]
 then
     $(rm $PWD/cscope.* > /dev/null 2> /dev/null)
+fi
+
+if [ $1 == "-u" ] || [ $1 == "-U" ] || [ $1 == "--update" ]
+then
+    cscope -Rqbvk
+    exit 0
 fi
 
 cscope_file_path=$PWD/cscope.files

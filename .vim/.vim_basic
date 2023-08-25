@@ -20,7 +20,7 @@ set virtualedit+=onemore
 
 " For showing the tab character
 :set list
-:set listchars=tab:>-
+:set listchars=tab:»·
 
 
 " Show file name even only one file is opened
@@ -31,3 +31,6 @@ au BufNewFile,BufRead * if &syntax == '' | set syntax=C | endif
 
 " Let the backspace work fine
 set backspace=indent,eol,start
+
+" Set swp files
+:set directory=$HOME/.vim/swapfiles//

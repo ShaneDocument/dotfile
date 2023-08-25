@@ -44,3 +44,6 @@ highlight DiffText term=reverse ctermfg=235 ctermbg=180 guifg=#282C34 guibg=#E50
 if &diff
     highlight CursorLine term=underline gui=underline guibg=NONE ctermbg=NONE
 endif
+
+" Disable highlight of Quickfix
+highlight QuickFixLine ctermbg=none

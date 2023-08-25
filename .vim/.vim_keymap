@@ -39,8 +39,8 @@ nmap <silent> <leader>gc :cclose<cr>
 nmap <silent> <leader>go :call EnterQuickFix()<cr>
 
 " Navigate the whole-line highlight in quickfix
-nnoremap <silent> <expr> j &buftype ==# 'quickfix' ? ":call QuickFixMoveHighlight('cnext')<CR>" : "j"
-nnoremap <silent> <expr> k &buftype ==# 'quickfix' ? ":call QuickFixMoveHighlight('cprev')<CR>" : "k"
+" nnoremap <silent> <expr> j &buftype ==# 'quickfix' ? ":call QuickFixMoveHighlight('cnext')<CR>" : "j"
+" nnoremap <silent> <expr> k &buftype ==# 'quickfix' ? ":call QuickFixMoveHighlight('cprev')<CR>" : "k"
 
 " window switch - Highlight for quickfix
 :nmap <silent> <leader>h :wincmd h<CR>:call QuickFixPatternHighlight()<CR>

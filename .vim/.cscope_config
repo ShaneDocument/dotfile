@@ -7,6 +7,7 @@ set cscopetag
 
 " Find the cscope.out to parent recusively
 let PATH_CSCOPE_DB = findfile("cscope.out", ".;")
+let g:FOLDER_PATH_CSCOPE_DB = fnamemodify(PATH_CSCOPE_DB, ':h')
 if filereadable(PATH_CSCOPE_DB)
     execute "cs add " . PATH_CSCOPE_DB
 endif
@@ -28,17 +29,25 @@ function! CscopeFind(type)
     let search_type = a:type
     let search_word = (search_type == "f" || search_type == "i") ? expand("<cfile>") : expand("<cword>")
     if g:cscope_quickfix == 0
-        execute "tab cs find " . search_type . " " . search_word . "\<CR>"
+        execute "tab cs find " . search_type . " " . search_word
     else
         " Clean the quickfix"
         execute "cexpr []"
-        execute "tab cs find " . search_type . " " . search_word . "\<CR>"
+        execute "tab cs find " . search_type . " " . search_word
         let quickfix_length = len(getqflist())
         if quickfix_length != 0
             execute "normal! \<C-O>"
             execute "copen"
+            if quickfix_length == 1
+                sleep 10m
+                call feedkeys("\<CR>")
+            endif
         endif
     endif
+endfunction
+
+function! CscopeUpdate()
+    execute "!cd " . g:FOLDER_PATH_CSCOPE_DB . "; ~/bash_script/build_cscope.sh -u"
 endfunction
 
 
@@ -62,10 +71,11 @@ nmap <leader>si :call CscopeFind("i")<CR>
 nmap <leader>ss :call CscopeFind("s")<CR>
 
 " Cscope key mapping
-:set cscopequickfix=s-,c-,d-,i-,t-,e-,a-
+:set cscopequickfix=s-,c-,d-,i-,t-,e-,a-,g-,f-
 
 " Set Syntax highlight for quickfix
 autocmd FileType qf setlocal filetype=c
 
 nmap <leader>sq :call CscopeQucikfix()<CR>
 
+nmap <leader>su :call CscopeUpdate()<CR>
