@@ -20,7 +20,7 @@ function! CscopeQucikfix()
         execute "set cscopequickfix="
         let g:cscope_quickfix = 0
     else
-        execute "set cscopequickfix=s-,c-,d-,i-,t-,e-,a-"
+        execute "set cscopequickfix=s-,c-,d-,i-,t-,e-,a-,g-,f-"
         let g:cscope_quickfix = 1
     endif
 endfunction
@@ -28,21 +28,20 @@ endfunction
 function! CscopeFind(type)
     let search_type = a:type
     let search_word = (search_type == "f" || search_type == "i") ? expand("<cfile>") : expand("<cword>")
-    if g:cscope_quickfix == 0
-        execute "tab cs find " . search_type . " " . search_word
-    else
-        " Clean the quickfix"
-        execute "cexpr []"
-        execute "tab cs find " . search_type . " " . search_word
-        let quickfix_length = len(getqflist())
-        if quickfix_length != 0
-            execute "normal! \<C-O>"
-            execute "copen"
-            if quickfix_length == 1
-                sleep 10m
-                call feedkeys("\<CR>")
-            endif
+    " Clean the quickfix
+    execute "cexpr []"
+    execute "tab cs find " . search_type . " " . search_word
+    let quickfix_length = len(getqflist())
+    if quickfix_length != 0
+        " It will jump to the first result first, so we jump to the original location
+        execute "normal! \<C-O>"
+        execute "copen"
+        if quickfix_length == 1
+            call feedkeys("\<CR>")
         endif
+    endif
+    if quickfix_length == 0
+        execute "copen | cclose"
     endif
 endfunction
 

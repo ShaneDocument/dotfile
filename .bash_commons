@@ -28,5 +28,7 @@ vim()
     stty "$STTYOPTS"
 }
 
+# For history
+export PROMPT_COMMAND="history -a; history -n; history -r;"
 source ~/.bash_prompt
 source ~/.bash_keybinds
