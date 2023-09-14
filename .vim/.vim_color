@@ -41,9 +41,6 @@ highlight DiffDelete term=bold ctermfg=235 ctermbg=204 guifg=#282C34 guibg=#E06C
 highlight DiffChange term=bold cterm=underline ctermfg=180 gui=underline guifg=#E5C07B
 highlight DiffText term=reverse ctermfg=235 ctermbg=180 guifg=#282C34 guibg=#E5C07B
 
-if &diff
-    highlight CursorLine term=underline gui=underline guibg=NONE ctermbg=NONE
-endif
 
 " Disable highlight of Quickfix
 highlight QuickFixLine ctermbg=none
@@ -53,6 +50,10 @@ highlight QuickFixLine ctermbg=none
 autocmd FileType qf highlight CursorLine cterm=bold ctermbg=DarkCyan ctermfg=White guibg=#005f5f guifg=#ffffff
 autocmd WinEnter * if &buftype == 'quickfix' | highlight CursorLine cterm=bold ctermbg=DarkCyan ctermfg=White guibg=#005f5f guifg=#ffffff | endif
 
-" Restore default highlight when exiting quickfix window
-autocmd WinLeave * if &buftype == 'quickfix' | highlight CursorLine term=underline cterm=bold ctermbg=237 ctermfg=none guibg=#313640 guifg=NONE | endif
-autocmd WinEnter * if &buftype != 'quickfix' | highlight CursorLine term=underline cterm=bold ctermbg=237 ctermfg=none guibg=#313640 guifg=NONE | endif
+if &diff
+    highlight CursorLine term=underline gui=underline guibg=NONE ctermbg=NONE
+else
+    " Restore default highlight when exiting quickfix window
+    autocmd WinLeave * if &buftype == 'quickfix' | highlight CursorLine term=underline cterm=bold ctermbg=237 ctermfg=none guibg=#313640 guifg=NONE | endif
+    autocmd WinEnter * if &buftype != 'quickfix' | highlight CursorLine term=underline cterm=bold ctermbg=237 ctermfg=none guibg=#313640 guifg=NONE | endif
+endif
