@@ -47,6 +47,7 @@ endfunction
 
 function! CscopeUpdate()
     execute "!cd " . g:FOLDER_PATH_CSCOPE_DB . "; ~/bash_script/build_cscope.sh -u"
+    execute "cscope reset"
 endfunction
 
 
