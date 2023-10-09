@@ -11,6 +11,10 @@ nnoremap <SPACE> <Nop>
 :inoremap ' ''<Esc>i
 " Press Ctrl + s to update the file
 :inoremap <silent> <C-s> <Esc>:up<CR>
+nmap <silent> <C-s> <Esc>:up<CR>
+
+:inoremap <silent> <C-w> <Esc>:q<CR>
+nmap <silent> <C-w> <Esc>:q<CR>
 
 " Set for vim-Clangformat
 xnoremap <silent> <C-c> :ClangFormat<CR>
