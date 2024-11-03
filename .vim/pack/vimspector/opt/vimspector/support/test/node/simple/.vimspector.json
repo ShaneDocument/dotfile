@@ -1,0 +1,30 @@
+{
+  "configurations": {
+    "run - legacy": {
+      "adapter": "vscode-node",
+      "configuration": {
+        "request": "launch",
+        "protocol": "auto",
+        "stopOnEntry": true,
+        "console": "integratedTerminal",
+        "program": "${workspaceRoot}/simple.js",
+        "cwd": "${workspaceRoot}"
+      }
+    },
+    "run - js-debug": {
+      "adapter": "js-debug",
+      "configuration": {
+        "request": "launch",
+        "program": "${workspaceRoot}/simple.js",
+        "cwd": "${workspaceRoot}",
+        "stopOnEntry": false
+      },
+      "breakpoints": {
+        "exception": {
+          "all": "",
+          "uncaught": ""
+        }
+      }
+    }
+  }
+}

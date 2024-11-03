@@ -49,7 +49,7 @@ copy_files() {
 
 log_file="./build_log"
 files=(".vim" ".vimrc" ".tmux.conf" ".tmux_theme" ".clang-format" "bash_script" ".bash_commons" ".bash_prompt" ".bash_keybinds")
-backup_folder="./bak"
+backup_folder="$HOME/dotfile_bak"
 clean_check="No need"
 backup_check="No need"
 install_check="Pass"
@@ -81,31 +81,46 @@ fi
 
 exec > >(tee "$log_file") 2>&1
 
-check_folder_exist $backup_folder
-if [ $? -eq 1 ]; then
-    echo "Start backing up..."
-    mkdir $backup_folder
-    echo "Start copying files..."
+
+# {{{ Backup Files
+echo "Start backup checking..."
+
+mkdir $backup_folder
+for file in ${files[@]}; do
+    src_file=$HOME/$file
+    if [[ -e "$file" ]]; then
+        diff_files_folders $src_file $file
+        if [ $? -ne 0 ]; then
+            echo "Start copying files..."
+            copy_files $src_file $backup_folder
+            backup_check="NeedCheck"
+        fi
+    fi
+done
+
+if [[ "$backup_check" == "NeedCheck" ]]; then
+    echo "Finish backup files."
     for file in ${files[@]}; do
-        src_file=$HOME/$file
-        copy_files $src_file $backup_folder
-    done
-    echo "Finish copying files."
-    for file in ${files[@]}; do
+        # Check for the backup
         src_file=$HOME/$file
         bak_file=$backup_folder/$file
-        diff_files_folders $src_file $bak_file
-        diff_result=$(diff -r "$src_file" "$bak_file")
-        if [ $? -eq 0 ]; then
-            echo "Backup of '$src_file' was successful. Files are identical."
-        else
-            echo "Backup of '$src_file' failed. Files are different."
-            # exit 2
+        if [[ -e "$src_file" ]]; then
+            if [[ -e "$bak_file" ]]; then
+                diff_files_folders $src_file $bak_file
+                diff_result=$(diff -r "$src_file" "$bak_file")
+                if [ $? -eq 0 ]; then
+                    echo "Backup of '$src_file' was successful. Files are identical."
+                    backup_check="Pass"
+                else
+                    echo "Backup of '$src_file' failed. Files are different."
+                    exit 2
+                fi
+            fi
         fi
     done
-    backup_check="Pass"
-    echo "Finish backing up."
 fi
+# Backup Files }}}
+
 
 echo "Removing files..."
 for file in ${files[@]}; do
