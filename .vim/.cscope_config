@@ -5,12 +5,16 @@
 " set cscope as ctags. So we can use ctrl+] to go definition and ctrl+T to return.
 set cscopetag
 
-" Find the cscope.out to parent recusively
-let PATH_CSCOPE_DB = findfile("cscope.out", ".;")
-let g:FOLDER_PATH_CSCOPE_DB = fnamemodify(PATH_CSCOPE_DB, ':h')
-if filereadable(PATH_CSCOPE_DB)
-    execute "cs add " . PATH_CSCOPE_DB
-endif
+function! CscopeFindDB()
+    " Find the cscope.out to parent recusively
+    let PATH_CSCOPE_DB = findfile("cscope.out", ".;")
+    let g:FOLDER_PATH_CSCOPE_DB = fnamemodify(PATH_CSCOPE_DB, ':h')
+    if filereadable(PATH_CSCOPE_DB)
+        execute "cs add " . PATH_CSCOPE_DB
+    endif
+endfunction
+
+:call CscopeFindDB()
 
 let g:cscope_quickfix = 1
 

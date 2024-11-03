@@ -78,3 +78,11 @@ function! OpenQuickfixInNewTabEnter()
     execute 'call OpenQuickfixInNewTab(quickfix_line)'
 endfunction
 
+" Function to toggle between listchars setting for tabs
+function! ToggleTabListChars()
+    if &listchars =~# 'tab:»·'
+        set listchars=tab:\ \ 
+    else
+        set listchars=tab:»·
+    endif
+endfunction

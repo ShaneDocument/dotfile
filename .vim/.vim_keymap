@@ -13,6 +13,7 @@ nnoremap <SPACE> <Nop>
 :inoremap <silent> <C-s> <Esc>:up<CR>
 nmap <silent> <C-s> <Esc>:up<CR>
 
+" Press Ctrl + w to close the file
 :inoremap <silent> <C-w> <Esc>:q<CR>
 nmap <silent> <C-w> <Esc>:q<CR>
 
@@ -67,3 +68,4 @@ augroup END
 :nmap <leader>w- :split<CR>
 :nmap <leader>w/ :vsplit<CR>
 
+nnoremap <leader>tl :call ToggleTabListChars()<CR>
