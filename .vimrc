@@ -7,6 +7,8 @@ source ~/.vim/.vim_keymap
 
 source ~/.vim/.vim_nerdtree
 
+source ~/.vim/.vim_coc
+
 source ~/.vim/.vim_color
 
 " include cscope configuration
@@ -16,7 +18,7 @@ source ~/.vim/.cscope_config
 :set rtp+=~/.vim/bundle/nerdtree
 :set rtp+=~/.vim/bundle/vim-clang-format
 :set rtp+=~/.vim/bundle/vim-airline
-:set rtp+=~/.vim/bundle/supertab
+" :set rtp+=~/.vim/bundle/supertab
 :set rtp+=~/.vim/bundle/taboverflow
 :set rtp+=~/.vim/bundle/vim-smoothie
 
@@ -47,6 +49,6 @@ let g:airline_mode_map = {
     \ ''     : 'V',
     \ }
 let g:vimspector_enable_mappings = 'HUMAN'
-packadd! vimspector
+" packadd! vimspector
 syntax enable
 filetype plugin indent on

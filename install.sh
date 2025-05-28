@@ -42,7 +42,7 @@ copy_files() {
     dest=$2
     full_path=$(realpath "$dest")
     printf "Copy [%s] to [%s]...\n" "$filename" "$full_path"
-    cp -r -v $filename $dest
+    cp -r -f $filename $dest
 }
 
 
@@ -83,7 +83,7 @@ exec > >(tee "$log_file") 2>&1
 
 
 # {{{ Backup Files
-echo "Start backup checking..."
+echo "********************************** Start backup checking... **********************************"
 
 mkdir $backup_folder
 for file in ${files[@]}; do
@@ -99,7 +99,7 @@ for file in ${files[@]}; do
 done
 
 if [[ "$backup_check" == "NeedCheck" ]]; then
-    echo "Finish backup files."
+    echo "********************************** Finish backup files. **********************************"
     for file in ${files[@]}; do
         # Check for the backup
         src_file=$HOME/$file
@@ -122,14 +122,30 @@ fi
 # Backup Files }}}
 
 
-echo "Removing files..."
+# {{{ Remove Files
+echo "********************************** Removing files... **********************************"
 for file in ${files[@]}; do
     rm -rf $HOME/$file
 done
+# Remove Files }}}
 
+
+# {{{ Installing Files
+echo "********************************** Installing files... **********************************"
 for file in ${files[@]}; do
     copy_files ./$file $HOME
 done
+echo "********************************** Finish Installing files **********************************"
+
+echo "********************************** Setting up vim... **********************************"
+
+# install vim coc.vim help document
+vim -c "helptags ~/.vim/pack/coc/start/coc.nvim/doc/ | q"
+
+echo "********************************** Finish Setting up vim **********************************"
+# Installing Files }}}
+
+
 # Check the file is install or not
 for file in ${files[@]}; do
     diff_files_folders ./$file $HOME/$file
@@ -139,7 +155,7 @@ for file in ${files[@]}; do
 done
 
 # Setting bashrc...
-echo "Setting bashrc..."
+echo "********************************** Setting bashrc... **********************************"
 if grep -q "bash_commons" "$HOME/.bashrc"; then
     echo "Already finish setting .bashrc."
 else
