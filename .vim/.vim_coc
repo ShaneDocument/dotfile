@@ -56,10 +56,13 @@ nmap <silent><nowait> [g <Plug>(coc-diagnostic-prev)
 nmap <silent><nowait> ]g <Plug>(coc-diagnostic-next)
 
 " GoTo code navigation
-nmap <silent><nowait> <leader>gd :call CocActionAsync('jumpDefinition', 'tab drop')<CR>
-nmap <silent><nowait> <leader>gt :call CocActionAsync('jumpTypeDefinition', 'tab drop')<CR>
-nmap <silent><nowait> <leader>gi :call CocActionAsync('jumpImplementation', 'tab drop')<CR>
-nmap <silent><nowait> <leader>gr :call CocActionAsync('jumpReferences', 'tab drop')<CR>
+" c mean: coc
+nmap <silent><nowait> <leader>cd :call CocActionAsync('jumpDefinition', 'tab drop')<CR>
+nmap <silent><nowait> <leader>ct :call CocActionAsync('jumpTypeDefinition', 'tab drop')<CR>
+nmap <silent><nowait> <leader>ci :call CocActionAsync('jumpImplementation', 'tab drop')<CR>
+nmap <silent><nowait> <leader>cr :call CocActionAsync('jumpReferences', 'tab drop')<CR>
+nmap <silent><nowait> <leader>cc :call CocActionAsync('showIncomingCalls', 'tab drop')<CR>
+
 
 " Use K to show documentation in preview window
 nnoremap <silent> K :call ShowDocumentation()<CR>
