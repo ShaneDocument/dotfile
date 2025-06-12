@@ -10,6 +10,8 @@ syntax on
 :set incsearch
 :set expandtab
 :set tabstop=4
+" Set the tab to 4 sapces
+:set ts=4 sw=4
 :set mouse=" "
 :set hlsearch
 :set ignorecase
