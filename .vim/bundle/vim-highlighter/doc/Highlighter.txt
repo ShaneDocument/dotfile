@@ -1,0 +1,834 @@
+*Highlighter.txt*  vim-highlighter
+                                                                             ~
+                                                                             ~
+              |   |_)       |     |_)       |     |                          ~
+              |   | |  _` | __ \  | |  _` | __ \  __|  _ \  __|              ~
+              ___ | | (   | | | | | | (   | | | | |    __/ |                 ~
+             _|  _|_|\__, |_| |_|_|_|\__, |_| |_|\__|\___|_|                 ~
+                      |___/           |___/                                  ~
+                                                                             ~
+                      Azabiong <azabiongc@gmail.com>                         ~
+                              License: MIT                                   ~
+                                                                             ~
+------------------------------------------------------------------------------
+CONTENTS                                                           *Highlighter*
+                                                                   `ver 1.63.3`
+                 Introduction            |Hi-Introduction|
+                 Key Map                 |Hi-Key-Map|
+                 Jump to Highlight       |Hi-Jump-To-Highlight|
+                 One Time Highlight      |Hi-One-Time-Highlight|
+                 Following Highlight     |Hi-Following-Highlight|
+                 Positional Highlight    |Hi-Positional-Highlight|
+                 Save & Load             |Hi-Save-Load|
+                 Sync Mode               |Hi-Sync-Mode|
+                 Find in Files           |Hi-Find-In-Files|
+                 Customizing Colors      |Hi-Customizing-Colors|
+                 Commands                |Hi-Commands|
+                 Options                 |Hi-Options|
+                 Functions               |Hi-Functions|
+                 Issues                  |Hi-Issues|
+                 Log                     |Hi-Log|
+                 Credits                 |Hi-Credits|
+
+------------------------------------------------------------------------------
+INTRODUCTION                                                   *Hi-Introduction*
+
+Highlighting keywords or lines can be useful when analyzing code, reviewing
+summaries, and quickly comparing spellings. This plugin provides easy commands
+and shortcuts to set and delete highlights, and additional features such as
+Move to Highlight, Save and Load, Find Pattern, and Customize Colors.
+
+------------------------------------------------------------------------------
+KEY-MAP                   *HiSet*  *HiErase*  *HiClear*  *HiFind*  *HiSetSL*  *Hi-Key-Map*
+
+The plugin uses the following default key mapping variables that work in both
+normal and visual modes, and each key can be easily defined in the configuration
+file.
+>
+    let HiSet   = 'f<CR>'       " normal, visual
+    let HiErase = 'f<BS>'       " normal, visual
+    let HiClear = 'f<C-L>'      " normal
+    let HiFind  = 'f<Tab>'      " normal, visual
+    let HiSetSL = 't<CR>'       " normal, visual
+<
+    Default key mappings: `f Enter`, `f Backspace`, `f Ctrl+L`, `f Tab` and `t Enter`
+
+In normal mode, `HiSet` and `HiErase` keys set or erase highlighting of the word
+under the cursor. `HiClear` key clears all highlights.
+
+In visual mode, the highlight is selected as a partial pattern from the selection
+and applied to other words. To select the same pattern again, |gv| command would be
+useful. You can also select an entire line and highlight it.
+
+To set highlighting by entering a pattern:
+>
+    :Hi + pattern
+<
+`HiFind` key is the shortcut for `FIND IN FILES HIGHLIGHT`
+
+------------------------------------------------------------------------------
+JUMP TO HIGHLIGHT                                         *Hi-Jump-To-Highlight*
+
+The plugin supports jumping to highlights using three sets of commands.
+
+Pattern ~
+  The `Hi<` and `Hi>` commands move the cursor back and forth to highlights that
+  matches the pattern at the cursor position or to the recently set highlight.
+
+Position ~
+  The `Hi{` and `Hi}` commands move the cursor to the nearest highlight, even if
+  the pattern or type differs from the current selection.
+
+Color ~
+  The `Hi[` and `Hi]` commands support moving to highlights of the same color with
+  different patterns or types, which can be useful when grouping highlights by
+  content.
+
+You can easily define key mappings for these commands. For example:
+>
+    nn gj <Cmd>Hi><CR>
+    nn gk <Cmd>Hi<<CR>
+<
+Alternatively, you can map the `n` and `N` keys to |HiSearch()| function, which
+automatically selects the search type between native search and jump commands.
+
+------------------------------------------------------------------------------
+ONE TIME HIGHLIGHT                                       *Hi-One-Time-Highlight*
+
+When you only need quick pattern matching at the cursor position without
+setting highlighting, `ONE TIME HIGHLIGHT` can be useful.
+
+When the cursor is over a word or visual selection that is not highlighted,
+pressing |HiErase| key sets `ONE TIME HIGHLIGHT`, The highlight remains on while
+the cursor is stationary, and automatically turns off after the cursor moves.
+
+`ONE TIME HIGHLIGHT` displays matches in all windows on the current |tab-page|,
+and `Jump` commands `Hi<>` and `Hi[]` are also supported.
+
+------------------------------------------------------------------------------
+FOLLOWING HIGHLIGHT                                     *Hi-Following-Highlight*
+
+When you need automatic matching based on cursor movement, `FOLLOWING HIGHLIGHT`
+mode may be useful.
+
+Pressing |HiSet| key over `ONE TIME HIGHLIGHT` without moving the cursor sets
+`FOLLOWING HIGHLIGHT` mode. The highlight follows the cursor. Pressing |HiErase|
+key turns off the mode.
+
+Matching option ~
+
+    Sometimes, when comparing patterns consisting of letters and symbols,
+    Vim's |<cWORD>| matching option can be useful.
+>
+      object.method      property:'value'      https://www.vim.org
+      item[index]        attribute="value"     AB:12:CD:34:EF:56
+      function(param)    directory/file.ext    --long-option
+<
+    The following command toggles between the default |<cword>| and |<cWORD>|
+    matching options:
+>
+      :Hi <>
+<
+`FOLLOWING HIGHLIGHT` displays matches in all windows on the current |tab-page|,
+and `Jump` commands `Hi<>` and `Hi[]` are also supported.
+
+------------------------------------------------------------------------------
+POSITIONAL HIGHLIGHT                                   *Hi-Positional-Highlight*
+
+Unlike pattern-based highlighting, `POSITIONAL HIGHLIGHT` is set to a specific
+position in the buffer. Thanks to new APIs in Vim and Neovim, it's similar to
+coloring over text with a highlighter. The position is updated when inserting
+or deleting the line above.
+
+To set a `POSITIONAL HIGHLIGHT` on a specific line, press the |HiSetSL| key in
+normal or visual mode.
+
+Multiline highlighting is now automatically set to positional highlighting.
+
+`Jump` commands `Hi{}` and `Hi[]` are supported after setting.
+
+------------------------------------------------------------------------------
+SAVE AND LOAD                                                     *Hi-Save-Load*
+
+Sometimes when you want to save highlights of the current window, and reload
+them next time, you can use:
+>
+    :Hi save
+<
+and when loading:
+>
+    :Hi load
+<
+You can name the file when saving, and use <Tab> completion when loading.
+For example:
+>
+    :Hi save name
+    :Hi load <Tab>
+<
+Highlight files are stored in a user configurable |HiKeywords| directory. To
+browse and manage files in the directory, you can open |netrw| using the command:
+>
+    :Hi ls
+<
+You can also use relative paths. For example, to save and load a highlight file
+in the current directory:
+>
+    :Hi save ./name
+    :Hi load ./<Tab>
+<
+------------------------------------------------------------------------------
+SYNC MODE                                                         *Hi-Sync-Mode*
+
+The plugin supports three highlight sync mode commands.
+
+For each single window highlighting mode:
+>
+    :Hi =
+<
+To synchronize window highlighting on each tab-page:
+>
+    :Hi ==
+<
+When synchronizing window highlighting across all tab-pages:
+>
+    :Hi ===
+<
+The initial mode can be set using the |HiSyncMode| configuration variable.
+
+------------------------------------------------------------------------------
+FIND IN FILES                                                 *Hi-Find-In-Files*
+
+If you have installed hi-performance search tools such as 'ag', 'rg', 'ack',
+'sift' or 'grep', the plugin can run it when looking for patterns based on the
+current directory. And when the given expression is simple, the plugin can
+highlight patterns to make them easier to find.
+
+1.Search tool ~
+
+    If one of the tools listed above is in the `$PATH`, the plugin can run it
+    using default options. You can also set your preferred search tool and
+    options in the |HiFindTool| variable. For example:
+>
+        let HiFindTool = 'grep -H -EnrI --exclude-dir=.git'
+<
+    Please see the |HiFindTool| section for more options.
+
+2.Input ~
+
+    |HiFind| key brings up `Hi/Find` command prompt.
+    You can use general order of passing arguments to search tools:
+>
+      :Hi/Find  [options]  expression  [directories_or_files]
+<
+    <Tab> key completion for --long-options, directory and file names is supported.
+
+  Tip ~
+    You can use the `Up` key to select a previously entered command.
+>
+      :Hi/Find  <Up>
+<
+    To enter the filename of the currently focused buffer in the path field,
+     `%` or `% Tab` keys can be useful.
+>
+      :Hi/Find  expression  %<Tab>
+<
+3.Expression ~
+
+    Among various regular expression options in Vim, the plugin uses "very magic"
+    style syntax which uses the standard regex syntax with fewer escape sequences.
+
+  Example ~
+    Searching for "red" or "blue":
+>
+      :Hi/Find  red|blue
+<
+    Pattern with spaces:
+>
+      :Hi/Find  "pattern with spaces"
+     or
+      :Hi/Find  pattern\ with\ spaces
+<
+    Class types or variables that start with an uppercase letter A or S:
+      Array, Set, String, Symbol...
+>
+      :Hi/Find  \b[AS]\w+
+<
+4.Options ~
+
+  -F --fixed-strings  -Q --literal ~
+    This option treats the input as a literal string, which is useful when
+    searching for codes with symbols.
+>
+       ag,  rg,  grep,  git   -F --fixed-strings
+       ack, sift              -Q --literal
+<
+    Example: searching for `item[i+1].size() * 2`
+>
+      :Hi/Find  -F  'item[i+1].size() * 2'
+<
+  --smart-case ~
+    When this option is set to the default, you can force a case-sensitive
+    search by using the option -s or -I
+>
+       ag,  rg      -s --case-sensitive
+       ack, sift    -I --no-ignore-case
+<
+5.Visual selection ~
+
+    When searching for parts of a string in a file as is, visual selection
+    would be useful. After selecting the part, press |HiFind| key. The plugin
+    will escape the pattern properly.
+
+6.Find window ~
+
+    The following keys and functions are available in the `Find` window.
+
+       r      Resize / Rotate
+       i      View
+       s      Split and View
+    <Enter>   Jump to position
+     CTRL-C   Stop searching
+
+7.Navigation ~
+
+    Additional commands are supported to quickly navigate through search results.
+
+    |Hi/next| and |Hi/previous| commands jump directly to the location of the file.
+
+    |Hi/older| and |Hi/newer| commands navigate the search history.
+
+    It would be convenient to define key mappings for these commands for easy
+    navigation. For example:
+>
+      nn -        <Cmd>Hi/next<CR>
+      nn _        <Cmd>Hi/previous<CR>
+      nn f<Left>  <Cmd>Hi/older<CR>
+      nn f<Right> <Cmd>Hi/newer<CR>
+<  Tip ~
+    Pressing the number `1` before the |Hi/next| command invokes a special
+    function that jumps to the first item in the search results. For example,
+    in the mapping above, entering `1-` will jump to the first item.
+
+------------------------------------------------------------------------------
+CUSTOMIZING COLORS                                       *Hi-Customizing-Colors*
+
+The plugin provides two default color sets which are automatically loaded based
+on the current 'background' mode.
+>
+    HiColor1, HiColor2, HiColor3, ... HiColor14
+    HiFollow, HiOneTime, HiFind, HiGuide
+<
+You can use the |:hi| command to add, change, rearrange colors, and save them to
+the configuration file or color scheme.
+
+Example 1 ~
+
+    The following command adds two custom colors numbered 21 and 22.
+>
+      :hi HiColor21 ctermfg=20  ctermbg=159 guifg=#0000df guibg=#afffff
+      :hi HiColor22 ctermfg=228 ctermbg=129 guifg=#ffff87 guibg=#af00ff
+<
+    Now move the cursor to any word, and then input the number `21` and |HiSet|
+    key. Does it work? If you press |HiSet| key again, the next color will be set.
+    You can try different values while seeing the results immediately.
+
+Example 2 ~
+
+    The following command changes the color of `FIND IN FILES HIGHLIGHT`
+>
+      :hi HiFind ctermfg=52 ctermbg=182 guifg=#570707 guibg=#e7bfe7
+<
+Multiline highlight color numbers start at 80, `HiColor80`.
+
+------------------------------------------------------------------------------
+COMMANDS                                                 *:HI*  *:Hi*  *Hi-Commands*
+
+Highlighter commands start with `Hi` or `HI` for easy typing, and are combined
+with subsequent commands using an optional space.
+
+:Hi ~
+    Print the plugin version
+                                                                  *:HI+*  *:HI+x*
+:Hi +  +x ~
+    |HiSet| key function in normal mode (+), visual mode (+x)
+    Set highlights of the word under the cursor, visual selection, or a given
+    expression. An optional color number can be specified before the command.
+>
+      :[number] Hi+ [expression]
+<
+  Example ~
+>
+      :Hi+            " HiSet key function in normal mode
+      :8 Hi+          " pick color number 8 and set highlight
+      :Hi+ pattern    " set highlights using this pattern
+<  Tip ~
+    It may be convenient to type in all uppercase letters.
+>
+      :HI+
+<
+    To highlight the pattern used in your search:
+>
+      :Hi+ CTRL-R /
+<                                                                *:HI+%*  *:HI+x%*
+:Hi +%  +x% ~
+    |HiSetSL| key function in normal mode (+%), visual mode (+x%)
+    Set `POSITIONAL HIGHLIGHT` at the position of the word under the cursor,
+    visual selection. An optional color number can be specified before the
+    command.
+                                                                  *:Hi-*  *:Hi-x*
+:Hi -  -x ~
+    |HiErase| key function in normal mode (-), visual mode (-x)
+    Erase highlights of the word under the cursor, visual selection, patterns
+    set by "Hi+ pattern" command, or set `ONE TIME HIGHLIGHT`
+                                                                   *:HI>*  *:HI<*
+:Hi > ~
+:Hi < ~
+    Jump forward | backward to highlights of the same pattern at the cursor
+    position, or recently set highlights. An optional jump count before the
+    command is supported. It would be convenient to use shortcut keys for these
+    commands. For example:
+>
+      nn gj <Cmd>Hi><CR>
+      nn gk <Cmd>Hi<<CR>
+<
+    Alternatively, you can map `n` and `N` keys to the |HiSearch()| function.
+                                                                   *:HI}*  *:HI{*
+:Hi } ~
+:Hi { ~
+    Jump forward | backward to the nearest highlight. These commands support
+    jumping to adjacent highlights in different patterns and types. It would
+    also be convenient to use key mapping for these commands. For example:
+>
+      nn gl <Cmd>Hi}<CR>
+      nn gh <Cmd>Hi{<CR>
+<                                                                   *:Hi]*  *:Hi[*
+:Hi ] ~
+:Hi [ ~
+    Jump forward | backward to highlights of the same color.
+    These commands support moving to highlights of the same color with different
+    patterns or types. This can be useful when grouping highlights by content.
+    When setting the highlights, you can specify a color number before the |Hi+|
+    command. For key mapping, for example:
+>
+      nn g<CR> <Cmd>Hi]<CR>
+      nn g<BS> <Cmd>Hi[<CR>
+<                                                                        *:HI>>*
+:Hi >> ~
+    Set `FOLLOWING HIGHLIGHT` mode
+                                                                     *:HI:clear*
+:Hi clear ~
+    |HiClear| key function
+    Clear all highlights in the current window
+                                                          *:Hi=*  *:Hi==*  *:Hi===*
+:Hi = ~
+    Set single window highlighting mode
+:Hi == ~
+    Synchronize window highlighting on each |tab-page|
+:Hi === ~
+    Synchronize window highlighting across all |tab-page|s
+
+                                                 *:HI<>*  *:HI<cword>*  *:HI<cWORD>*
+:Hi <>  <cword>  <cWORD> ~
+    Set word matching mode in `FOLLOWING HIGHLIGHT`
+    <> toggle between two modes
+                                                            *:HI:save*  *:HI:load*
+:Hi save ~
+:Hi load ~
+    Save | Load highlights of the current window to/from the user configurable
+    |HiKeywords| directory or relative path
+                                                                        *:HI:ls*
+:Hi ls ~
+    Open the |HiKeywords| directory using |netrw| to browse and manage the list of
+    highlight files
+                                                                      *:Hi/Find*
+:Hi/Find ~
+    `FIND IN FILES` command prompt activated by |HiFind| key in normal and visual
+    mode
+                                                        *:Hi/next*  *:Hi/previous*
+:Hi /next ~
+:Hi /previous ~
+    Jump to the next | previous item in the `Find` list
+    It will be convenient to use keyboard shortcuts for these commands to easily
+    navigate the search list. For example:
+>
+      nn - <Cmd>Hi/next<CR>
+      nn _ <Cmd>Hi/previous<CR>
+<
+    You can also define multifunction keys using |HiFind()| function.
+                                                          *:Hi/older*  *:Hi/newer*
+:Hi /older ~
+:Hi /newer ~
+    Go to older | newer `Find` list in history
+    It would also be convenient to map these commands somewhere. For example:
+>
+      nn f<Left>  <Cmd>Hi/older<CR>
+      nn f<Right> <Cmd>Hi/newer<CR>
+<                                                           *:Hi/open*  *:Hi/close*
+:Hi /open ~
+:Hi /close ~
+    Open | Close `Find` window
+                                                                         *:Hi//*
+:Hi // ~
+    Clear highlights of the `Find` result
+                                                                   *:HI:default*
+:Hi default ~
+    Load plugin default colors for the current 'background' mode
+
+------------------------------------------------------------------------------
+OPTIONS                                                             *Hi-Options*
+                                                                     *HiMapKeys*
+|HiMapKeys| option enables key mapping on load.
+
+    Default: 1 `(enable)`
+    Values:  0 `(off)`
+                                                                    *HiSyncMode*
+|HiSyncMode| specifies the initial highlight synchronization mode, `SYNC MODE`
+
+    Default: 1 `(synchronize highlighting of windows on each tab-page)`
+    Values:  2 `(synchronize highlighting of all windows across all tab-pages)`
+             0 `(off)`
+                                                                    *HiKeywords*
+|HiKeywords| specifies the directory in which to save the highlights of the current
+window to a file. Now the default setting is:
+>
+        let HiKeywords = '~/.config/keywords'
+<
+    The |Hi:ls| command opens |netrw| window for browsing and managing files in
+    the directory.
+
+    If necessary, optional keyword files to skip focusing in `FOLLOWING HIGHLIGHT`
+    mode can be stored in the directory using the 'filetype' as the filename.
+
+    Additional search tool options for `FIND IN FILES` can also be stored in the
+    directory.
+                                                                      *HiBackup*
+|HiBackup| option specifies whether to create a backup file when an existing highlight
+    file is overwritten by the |Hi:save| command. The plugin appends a '.o' extension
+    to the backup file. You can easily restore the file by simply removing the '.o'
+    extension.
+
+    Default: 1 `(on)`
+    Values:  0 `(off)`
+                                                                    *HiFindTool*
+|HiFindTool|, in this variable, you can set your preferred search tool and options
+    to run when using `FIND IN FILES` function. For example,
+    grep: >
+          let HiFindTool = 'grep -H -EnrI --exclude-dir=.git'
+<    ag: >
+          let HiFindTool = 'ag --nocolor --noheading --column --nobreak'
+<    rg: >
+          let HiFindTool = 'rg -H --color=never --no-heading --column --smart-case'
+<    ack: >
+          let HiFindTool = 'ack -H --nocolor --noheading --column --smart-case'
+<    sift: >
+          let HiFindTool = 'sift --no-color --line-number --column --binary-skip --git --smart-case'
+<    ggrep: >
+          let HiFindTool = 'ggrep -H -EnrI --exclude-dir=.git'
+<    git grep: >
+          let HiFindTool = 'git grep -EnI --no-color --column'
+<                                                                 *HiFindHistory*
+|HiFindHistory| specifies the number of recent `FIND IN FILES` lists to keep in
+    memory. |Hi/older| and |Hi/newer| commands can be used to navigate the list.
+
+    Default: 5
+    Values:  2 ~ 10
+                                                                 *HiCursorGuide*
+|HiCursorGuide| option specifies whether to display cursor guide when using jump
+    commands or in `FIND IN FILES` mode.
+
+    Default: 1 `(on)`
+    Values:  0 `(off)`
+                                                                 *HiOneTimeWait*
+|HiOneTimeWait| defines the wait time before turning off the highlights after the
+    cursor stops moving in `ONE TIME HIGHLIGHT` mode.
+
+    Default: 260 `(ms)`
+    Values:  0 ~ 320
+                                                                  *HiFollowWait*
+|HiFollowWait| defines the wait time before moving the highlights to the cursor
+    position after the cursor stops moving in `FOLLOWING HIGHLIGHT` mode.
+
+    Default: 320 `(ms)`
+    Values:  260 ~ 520
+                                                                  *HiEffectOne*
+|HiEffectOne| option enables a slight glow effect on `ONE TIME HIGHLIGHT` and
+    `FOLLOWING HIGHLIGHT` in |termguicolors| or GUI mode.
+
+    Default: 1 `(on)`
+    Values:  0 `(off)`
+
+CUSTOM OPTIONS~
+                                                                  *HiSetToggle*
+|HiSetToggle| option allows you to turn highlighting on or off using only the
+    |HiSet| key (issue #30).
+
+    Default: 0 `(off)`
+    Values:  1 `(on)`
+                                                           *HiClearUsingOneTime*
+|HiClearUsingOneTime| option assigns the normal mode `ONE TIME HIGHLIGHT` key to
+    the |HiClear| function (issue #10).
+
+    Default: 0 `(off)`
+    Values:  1 `(on)`
+
+------------------------------------------------------------------------------
+FUNCTIONS AND VARIABLES ~                                         *Hi-Functions*
+                                                                    *HiSearch()*
+|HiSearch()| function supports `n` and `N` key mappings for both the native search
+    and the plugin's jump commands (issue #12).
+>
+        nn n <Cmd>call HiSearch('n')<CR>
+        nn N <Cmd>call HiSearch('N')<CR>
+<
+    While |hlsearch| is displayed, the function executes the native search command
+    assigned to each key, otherwise, it executes the |Hi>| or |Hi<| command. When
+    switching from native search to jump mode, you can simply turn off |hlsearch|
+    using the |:noh| command. For example:
+>
+        nn <Esc>n <Cmd>noh<CR>
+<
+    The function returns the current search type:
+        `0` (native search), `1` (jump to highlight)
+                                                        *HiSetPos()*  *HiDelPos()*
+|HiSetPos()| function supports setting `POSITIONAL HIGHLIGHT` on a given line with
+    a given color number (PR #32). For example:
+
+    To highlight the entire line, using the next auto color: >
+    call HiSetPos(line)
+<
+    To highlight the entire line, with the given color: >
+    call HiSetPos(line, color)
+<
+    To highlight the text area of the given length, starting from the given column,
+    with the given color: >
+    call HiSetPos(line, column, length, color)
+<
+    To delete the entire highlight line: >
+    call HiDelPos(line)
+<
+    To delete the highlight at the column: >
+    call HiDelPos(line, column)
+<                                                                      *HiList()*
+|HiList()| function returns a list of highlight patterns for the current window,
+    which can be used to generate a |Quickfix| or |Location| list for further
+    processing (issue #11).
+
+    The return value is a list of the following format. Each dictionary entry
+    has a `color` number and a `pattern` field. For example: >
+    [{'color':2, 'pattern':'\VFoo'}, {'color':6, 'pattern':'\mBar'}]
+<
+    To list highlights of the current window as a Quickfix list: >
+    :exe 'vimgrep /\v('. HiList()->map({i,v -> v.pattern})->join('\v|'). '\v)/gj %' | copen
+<
+                                                                      *HiFind()*
+|HiFind()| function returns whether the `Find` window is visible`(1)` or not`(0)`,
+    which can be used to define multifunction keys.
+
+    For example, the following configuration defines the `-` `_` and `f-` keys
+    to execute the |Hi| command while the `Find` window is visible, otherwise
+    execute the original function.
+>
+        nn -  <Cmd>call <SID>HiOptional('next', '-')<CR>
+        nn _  <Cmd>call <SID>HiOptional('previous', '_')<CR>
+        nn f- <Cmd>call <SID>HiOptional('close', 'f-')<CR>
+
+        function s:HiOptional(cmd, key)
+          if HiFind()
+            exe "Hi" a:cmd
+          else
+            exe "normal!" a:key
+          endif
+        endfunction
+<                                                                   *HiFindLines*
+|HiFindLines| represents the number of lines found as a result of `FIND` `IN FILES`
+operation, which can be used to check the number of items found.
+
+------------------------------------------------------------------------------
+ISSUES                                                               *Hi-Issues*
+
+If you have any issues that need fixing, comments or new features you would
+like to add, please feel free to open an issue.
+
+------------------------------------------------------------------------------
+LOG                                                                     *Hi-Log*
+
+1.63.3~
+    Improve |HiSearch()| on "One Time Highlight" (issue #34)
+1.63~
+    Add APIs for setting "Positional Highlight" |HiSetPos()| (PR #32)
+1.62~
+    Add |HiSetToggle| option (issue #30)
+    Improve |HiSearch()| key input
+    Add |Hi]| command to jump to highlights of the same color
+    Add glow effects option |HiEffectOne| on HiOneTime and HiFollow highlights
+1.61~
+    Add "HiList" color
+    Fix "TabNew" error
+    Update "HiKeywords" default path
+    Support optional count in short jump commands |Hi{| and |Hi}|
+    Improve "Hi- pattern" command
+    Improve |Hi-Sync-Mode|
+    Upgrade highlight jump and delete function
+1.60~
+    Support "Hi ===" command across |tab-page|s with |HiSyncMode|=2 option
+    Fix highlighting in |command-line-window|
+    Fix highlight loading in |HiSyncMode| (issue #28)
+    Fix |HiSearch()| when 'set ic' option is on (issue #24)
+    Improve "Find" window highlight, resize, rotation, jump to position
+    Improve jump in |Hi-Sync-Mode|
+    Improve multiline color selection
+1.58~
+    Support "Positional Highlight" associated with a buffer.
+1.57~
+    Add "Positional Highlight" in |visual-block| mode (issue #22)
+1.56~
+    Support jump in "One Time Highlight" and "Following Highlight" modes
+1.55~
+    Add |HiSetSL| mapping to support highlighting in a specific line
+1.54~
+    Support "Hi- pattern" command paired with "Hi+ pattern" command (issue #16)
+1.53~
+    Improve "Find" window rotation with keystroke interval
+    Fix visual line selection in 'inclusive' mode (issue #15)
+    Add |HiSearch()| function to support jumping with 'n' and 'N' keys (issue #12)
+1.52~
+    Improve "Find" window rotation, view
+    Add |HiList()| function to support Quickfix list creation (issue #11)
+1.51~
+    Improve "Find" window and highlights
+    Add custom option |HiClearUsingOneTime| (issue #10)
+    Search using case-sensitive option
+1.50~
+    Support jump to matching highlights at the cursor position (issue #6)
+    Add |Hi}| command to jump to adjacent highlights.
+1.40~
+    Upgrade visual mode selection (issue #7)
+    Add |Hi>| command to jump to highlights of the same pattern
+    Support "Find" navigation after changing current directory
+1.39~
+    Improve "Following Highlight" mode focusing, clear default skip keywords
+    Fix "Find" using wild card file names
+1.38~
+    Add highlighting using expression (issue #5)
+      :Hi+ pattern
+    Improve "Find" search using visual selection
+1.37~
+    Add |HiCursorGuide| option to easily find cursor in 'Find' mode.
+    Improve "save" command backup
+    Fix "Find" path name expansion '~'
+1.36~
+    Support color scheme
+      . auto loading default colors for dark and light modes
+    Fix "Find" loading path starting with drive letter in Windows
+1.35~
+    Add options
+      . |HiSyncMode| for the default |Hi-Sync-Mode|
+      . |HiFind()| function to support multifunction keys
+1.34~
+    Add |HiBackup| option to back up highlight files when overwritten.
+1.33~
+    Improve "Find" results navigation
+      . center the cursor line when switching buffers
+      . fixed handling option '--'
+1.32~
+    Improve "Find" results navigation
+      . jump to the first item with number key 1
+1.31~
+    Improve usability
+      . "Hi" command <Tab> completion
+      . "Following Highlight" turning off operation
+      . grep default options
+1.30~
+    Improve "Find" results navigation
+      . preserving the index when switching lists
+      . optional count for Hi/next, Hi/previous
+      . focus switching after Hi/older commands
+1.29~
+    Improve usability
+      . relative path support for saving and loading highlights
+      . rename default.hl to _.hl
+      . runtime HiFindTool configuration
+1.28~
+    Add command mode <Tab> key completion
+      . grep long options, directory and file names
+    Improve ColorScheme change handling
+1.27~
+    Fix "Find" incorrect window resizing, grep options, --smart-case matching
+1.26~
+    Fix "Find" grep options, --smart-case matching
+1.25~
+    Add commands - save, load highlights
+    Improve "Find" window split
+1.24~
+    Fix "Find" window focus switching
+1.23~
+    Fix Jump to File
+1.22~
+    Improve "Find" window focus switching
+1.21~
+    Improve options
+      . fixed "Find" window rotation
+      . added "HiKeywords" option for user configurable keywords
+      . added "Sync Mode" toggle command
+1.20~
+    Add "Sync Mode"
+    Improve grep output list
+1.19~
+    Add "Following Highlight" <cWORD> matching mode
+      . extended matching to windows in the current tab
+    Adjust "HiFind" match priority
+      . added restoring HiFind color on color scheme change
+    Add user keywords options for search tools
+1.18~
+    Support multiple -e --regexp option
+      . fixed empty expression input
+      . added git-grep options
+    Highlight a single line using visual selection
+1.17~
+    Improve "Find in Files Highlight" input handling
+      . added --fixed-strings  --literal option
+1.16~
+    Add "Find in Files Highlight" --smart-case option
+1.15~
+    Add "Find in Files Highlight"
+      . "very magic" style regex syntax
+      . asynchronous search
+      . airline compatible
+    Improve "One Time Highlight" to show all matches in the current tab
+    Improve erasing highlight using visual selection
+1.14~
+    Improve highlight on the hlsearch
+1.13~
+    Add "Following Highlight" default keywords
+1.1~
+    Upgrade "Following Highlight" with well-known keywords.
+    Fix buffer switching error
+1.0~
+    Initial upload
+
+
+------------------------------------------------------------------------------
+CREDITS                                                             *Hi-Credits*
+
+I would like to thank the following people for their great feature suggestions,
+code contributions and help in resolving issues.
+
+
+         Miguel Pérez Pasalodos   Highlight using Input Pattern
+
+                    Jason Zheng   Upgraded Visual Selection
+
+                      Jinq Qian   Jump to Highlight
+
+                    Amin Roosta   Jump using `n` and `N` keys
+
+                      N. Dubray   Positional Highlight
+
+       Florent Bouchez Tichadou   APIs for Positional Highlight
+
+
+
+------------------------------------------------------------------------------
+Vim:tw=80:ts=4:ft=help:nowrap:norl
+
+

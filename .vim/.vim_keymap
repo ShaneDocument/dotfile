@@ -69,3 +69,11 @@ augroup END
 :nmap <leader>w/ :vsplit<CR>
 
 nnoremap <leader>tl :call ToggleTabListChars()<CR>
+
+
+" Highlighter: Default key mappings: f Enter, f Backspace, f Ctrl+L, f Tab and t Enter
+let HiSet   = 'f<CR>'
+let HiErase = 'f<BS>'
+let HiClear = 'f<C-L>'
+let HiFind  = 'f<Tab>'
+let HiSetSL = 't<CR>'

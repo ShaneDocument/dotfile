@@ -16,7 +16,7 @@ check_file_exist() {
     fi
     return 0
 }
-	
+
 diff_files_folders() {
     file1=$1
     file2=$2
