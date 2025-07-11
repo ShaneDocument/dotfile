@@ -22,6 +22,7 @@ source ~/.vim/.cscope_config
 :set rtp+=~/.vim/bundle/taboverflow
 :set rtp+=~/.vim/bundle/vim-smoothie
 :set rtp+=~/.vim/bundle/vim-highlighter
+:set rtp+=~/.vim/bundle/tagbar
 
 " ****** supertab Setting ******
 

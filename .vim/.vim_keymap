@@ -77,3 +77,8 @@ let HiErase = 'f<BS>'
 let HiClear = 'f<C-L>'
 let HiFind  = 'f<Tab>'
 let HiSetSL = 't<CR>'
+
+
+" tagbar
+" Show all functions in the current file
+nmap <F8> :TagbarToggle<CR>
