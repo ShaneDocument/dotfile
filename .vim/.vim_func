@@ -86,3 +86,14 @@ function! ToggleTabListChars()
         set listchars=tab:»·
     endif
 endfunction
+
+function! ReportMode()
+    set nospell
+    set nocursorline
+    set nonumber
+    highlight Normal ctermfg=black ctermbg=white guifg=#000000 guibg=#ffffff
+    highlight CursorLine ctermbg=white guibg=#ffffff
+    highlight Comment ctermfg=blue guifg=#0000cc
+    highlight LineNr ctermfg=darkgray ctermbg=white guifg=#666666 guibg=#ffffff
+    highlight Constant ctermfg=darkred guifg=#cc0000
+endfunction
