@@ -18,6 +18,8 @@ syntax on
 :set smartcase
 :set shortmess-=S
 
+:set foldmethod=marker
+
 " insert a virtual space to the right of the last char (in normal mode)
 set virtualedit+=onemore
 
