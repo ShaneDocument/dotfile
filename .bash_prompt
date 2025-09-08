@@ -105,7 +105,7 @@ function set_bash_prompt () {
 
   # Set the BRANCH variable.
   if is_git_repository ; then
-    set_git_branch
+    set_git_branch_fast
   else
     BRANCH=''
   fi
@@ -114,6 +114,42 @@ function set_bash_prompt () {
   PS1="
 ${PYTHON_VIRTUALENV}${YELLOW}[\t] ${GREEN}\u@\h ${YELLOW}\w${COLOR_NONE} ${BRANCH}
 ${PROMPT_SYMBOL} "
+}
+
+function set_git_branch_fast {
+    if ! git rev-parse --is-inside-work-tree &>/dev/null; then
+        BRANCH=""
+        return
+    fi
+
+    # branch
+    branch=$(git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
+
+    # state
+    if ! git diff --quiet 2>/dev/null; then
+        state="${LIGHT_RED}"
+    elif ! git diff --cached --quiet 2>/dev/null; then
+        state="${YELLOW}"
+    else
+        state="${GREEN}"
+    fi
+
+    # remote
+    remote=""
+    upstream=$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null)
+    if [[ -n "$upstream" ]]; then
+        ahead=$(git rev-list --count HEAD.."$upstream")
+        behind=$(git rev-list --count "$upstream"..HEAD)
+        if [[ $ahead -gt 0 && $behind -gt 0 ]]; then
+            remote="↕"
+        elif [[ $ahead -gt 0 ]]; then
+            remote="↑"
+        elif [[ $behind -gt 0 ]]; then
+            remote="↓"
+        fi
+    fi
+
+    BRANCH="${state}(${branch})${remote}${COLOR_NONE} "
 }
 
 # Tell bash to execute this function just before displaying its prompt.
