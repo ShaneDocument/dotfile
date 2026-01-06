@@ -39,3 +39,8 @@ set backspace=indent,eol,start
 
 " Set swp files
 :set directory=$HOME/.vim/swapfiles//
+augroup cfg_as_c
+    autocmd!
+    autocmd BufRead,BufNewFile *.cfg set filetype=c
+augroup END
+

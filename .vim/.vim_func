@@ -96,4 +96,12 @@ function! ReportMode()
     highlight Comment ctermfg=blue guifg=#0000cc
     highlight LineNr ctermfg=darkgray ctermbg=white guifg=#666666 guibg=#ffffff
     highlight Constant ctermfg=darkred guifg=#cc0000
+    highlight MyDone     ctermfg=0 ctermbg=2
+    highlight MyPending  ctermfg=0 ctermbg=3
+    highlight MyOnGoing  ctermfg=0 ctermbg=12
+    syntax match MyDone     /\V\<Done\>/
+    syntax match MyPending  /\V\<Pending\>/
+    syntax match MyOnGoing  /\V\<OnGoing\>/
 endfunction
+
+
