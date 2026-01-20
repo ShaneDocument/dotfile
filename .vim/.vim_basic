@@ -44,3 +44,9 @@ augroup cfg_as_c
     autocmd BufRead,BufNewFile *.cfg set filetype=c
 augroup END
 
+" Set cython as python
+augroup cython_filetype
+    autocmd!
+    autocmd BufRead,BufNewFile *.pyx set filetype=python
+augroup END
+
