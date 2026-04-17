@@ -82,3 +82,6 @@ let HiSetSL = 't<CR>'
 " tagbar
 " Show all functions in the current file
 nmap <F8> :TagbarToggle<CR>
+
+" Pressing " while text is selected will surround it with quotes
+vnoremap " c"<C-r>""<Esc>
