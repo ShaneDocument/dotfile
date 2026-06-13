@@ -1,6 +1,68 @@
 #!/bin/bash
 # Program:
 #   This program will install the most of the environment settings
+
+#!/bin/bash
+
+# Function to install Node.js v22 using official NodeSource binaries
+install_nodejs_v22() {
+    echo "=================================================="
+    echo " Checking and installing Node.js v22 Setup...     "
+    echo "=================================================="
+
+    # 1. Check if Node.js v22 is already installed to skip redundant work
+    if command -v node &> /dev/null; then
+        local current_version=$(node -v | sed 's/v//')
+        local major_version=$(echo "$current_version" | cut -d. -f1)
+        
+        if [ "$major_version" -eq 22 ]; then
+            echo "✅ Node.js v22 is already installed (Detected: v${current_version}). Skipping installation."
+            return 0
+        else
+            echo "⚠️ Found Node.js version v${current_version}, but Node.js v22 is required."
+            echo "Proceeding to upgrade/overwrite with version 22..."
+        fi
+    fi
+
+    # 2. Check for 'curl' (critical dependency for adding the repo source)
+    if ! command -v curl &> /dev/null; then
+        echo "📦 'curl' is missing. Installing curl first..."
+        sudo apt-get update && sudo apt-get install -y curl
+    fi
+
+    # 3. Verify user has sudo permissions before attempting installation
+    if ! sudo -v &> /dev/null; then
+        echo "❌ Error: Root privileges are required to configure apt repositories."
+        echo "Please re-run this installer script as a user with sudo access."
+        return 1
+    fi
+
+    # 4. Add NodeSource repository configuration
+    echo "🌐 Downloading and executing NodeSource setup for Node v22.x..."
+    if curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -; then
+        echo "✅ NodeSource repository successfully integrated."
+    else
+        echo "❌ Error: Failed to download or execute NodeSource repository script."
+        return 1
+    fi
+
+    # 5. Run the installation package command
+    echo "📦 Running apt-get install for nodejs..."
+    if sudo apt-get install -y nodejs; then
+        # Double check the installation was successful
+        local final_version=$(node -v)
+        echo "🚀 Node.js has been successfully installed! Version: $final_version"
+        return 0
+    else
+        echo "❌ Error: Apt-get failed to finish installing nodejs."
+        return 1
+    fi
+}
+
+# --- Example of running the script pipeline ---
+
+
+
 check_folder_exist() {
     BASENAME=$(basename $1)
     if [ ! -d $1 ]; then
@@ -138,7 +200,15 @@ done
 echo "********************************** Finish Installing files **********************************"
 
 echo "********************************** Setting up vim... **********************************"
+# Ensure the system package lists are updated before doing checks
+echo "Updating local apt package list..."
+sudo apt-get update -y
 
+# Call the function
+if ! install_nodejs_v22; then
+    echo "❌ Node.js initialization script failed. Terminating deployment loop."
+    exit 1
+fi
 # install vim coc.vim help document
 vim -c "helptags ~/.vim/pack/coc/start/coc.nvim/doc/ | q"
 

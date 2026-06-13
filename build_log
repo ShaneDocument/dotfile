@@ -1,0 +1,18 @@
+********************************** Start backup checking... **********************************
+mkdir: cannot create directory ‘/home/shane_lin/dotfile_bak’: File exists
+Files(folders) are different. ([/home/shane_lin/.vim] <-> [.vim])
+Start copying files...
+Copy [/home/shane_lin/.vim] to [/home/shane_lin/dotfile_bak]...
+Files(folders) are identical. ([/home/shane_lin/.vimrc] <-> [.vimrc])
+Files(folders) are identical. ([/home/shane_lin/.tmux.conf] <-> [.tmux.conf])
+Files(folders) are identical. ([/home/shane_lin/.tmux_theme] <-> [.tmux_theme])
+Files(folders) are identical. ([/home/shane_lin/.clang-format] <-> [.clang-format])
+Files(folders) are identical. ([/home/shane_lin/bash_script] <-> [bash_script])
+Files(folders) are different. ([/home/shane_lin/.bash_commons] <-> [.bash_commons])
+Start copying files...
+Copy [/home/shane_lin/.bash_commons] to [/home/shane_lin/dotfile_bak]...
+Files(folders) are identical. ([/home/shane_lin/.bash_prompt] <-> [.bash_prompt])
+Files(folders) are identical. ([/home/shane_lin/.bash_keybinds] <-> [.bash_keybinds])
+********************************** Finish backup files. **********************************
+Files(folders) are different. ([/home/shane_lin/.vim] <-> [/home/shane_lin/dotfile_bak/.vim])
+Backup of '/home/shane_lin/.vim' failed. Files are different.
