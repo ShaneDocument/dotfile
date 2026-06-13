@@ -210,6 +210,7 @@ if ! install_nodejs_v22; then
     exit 1
 fi
 # install vim coc.vim help document
+git submodule update --init --recursive
 vim -c "helptags ~/.vim/pack/coc/start/coc.nvim/doc/ | q"
 
 echo "********************************** Finish Setting up vim **********************************"
