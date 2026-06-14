@@ -193,6 +193,8 @@ done
 
 
 # {{{ Installing Files
+# install vim coc.vim and tagbar
+git submodule update --init --recursive
 echo "********************************** Installing files... **********************************"
 for file in ${files[@]}; do
     copy_files ./$file $HOME
@@ -203,14 +205,12 @@ echo "********************************** Setting up vim... *********************
 # Ensure the system package lists are updated before doing checks
 echo "Updating local apt package list..."
 sudo apt-get update -y
-
-# Call the function
+# install nodejs for coc.
 if ! install_nodejs_v22; then
     echo "❌ Node.js initialization script failed. Terminating deployment loop."
     exit 1
 fi
-# install vim coc.vim help document
-git submodule update --init --recursive
+
 vim -c "helptags ~/.vim/pack/coc/start/coc.nvim/doc/ | q"
 
 echo "********************************** Finish Setting up vim **********************************"

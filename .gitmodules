@@ -2,3 +2,7 @@
 	path = .vim/pack/coc/start/coc.nvim
 	url = https://github.com/neoclide/coc.nvim.git
 	branch = release
+[submodule ".vim/bundle/tagbar"]
+	path = .vim/bundle/tagbar
+	url = https://github.com/preservim/tagbar.git
+	branch = release
